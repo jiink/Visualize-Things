@@ -15,6 +15,8 @@ public class RadialMenuController : MonoBehaviour
     private OVRHand _ovrHandRight;
     [SerializeField]
     private PinchDetector _pinchDetector;
+    [SerializeField]
+    private RadialMenuDefinition _primaryRadialMenuDef;
 
     private GameObject _radialMenu;
     private OVRPlugin.Hand _activeHand;
@@ -77,6 +79,7 @@ public class RadialMenuController : MonoBehaviour
         _radialMenu = Instantiate(_radialMenuPrefab);
         _radialMenu.transform.position = hand.position;
         _radialMenu.transform.LookAt(_headPos);
+        _radialMenu.GetComponent<RadialMenu>().Populate(_primaryRadialMenuDef);
     }
 
     private void HideRadialMenu()

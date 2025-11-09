@@ -1011,11 +1011,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1046966446 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2618914886016112181, guid: 0a7d2469f24041c4284c66706f84c45e, type: 3}
-  m_PrefabInstance: {fileID: 39043061}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1074158717
 GameObject:
   m_ObjectHideFlags: 0
@@ -1840,7 +1835,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   _radialMenuPrefab: {fileID: 14148020393856914, guid: c55ce664bcfd32c4fb1d412a17e2a56b, type: 3}
-  _hmd: {fileID: 1046966446}
+  _headPos: {fileID: 1122695967}
   _ovrHandLeft: {fileID: 513894231}
   _ovrHandRight: {fileID: 359304732}
   _pinchDetector: {fileID: 985656602}

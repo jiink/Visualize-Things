@@ -27,7 +27,6 @@ public class PinchDetector : MonoBehaviour
         {
             return;
         }
-        //bool isPinching = hand.GetFingerIsPinching(finger);
         bool isPinching = hand.GetFingerPinchStrength(finger) > 0.77f;
         if (isPinching && !wasPinching)
         {
@@ -42,7 +41,6 @@ public class PinchDetector : MonoBehaviour
 
     void Update()
     {
-        Debug.Log($"GetFingerPinchStrength: {_ovrHandLeft.GetFingerPinchStrength(OVRHand.HandFinger.Middle):F2}");
         CheckPinchState(_ovrHandLeft, OVRHand.HandFinger.Ring, ref _wasLeftRingPinching);
         CheckPinchState(_ovrHandLeft, OVRHand.HandFinger.Middle, ref _wasLeftMiddlePinching);
         CheckPinchState(_ovrHandRight, OVRHand.HandFinger.Ring, ref _wasRightRingPinching);
