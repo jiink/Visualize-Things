@@ -78,3 +78,5 @@ crashlytics-build.properties
 /.utmp/RelWithDebInfo
 /.utmp
 /Realivation_BurstDebugInformation_DoNotShip
+/Assets/_Recovery
+Assets/_Recovery.meta

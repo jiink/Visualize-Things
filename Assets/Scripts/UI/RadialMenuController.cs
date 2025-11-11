@@ -89,4 +89,9 @@ public class RadialMenuController : MonoBehaviour
             GameObject.Destroy(_radialMenu);
         }
     }
+
+    public void PrintSomething(string text)
+    {
+        Debug.Log(text);
+    }
 }

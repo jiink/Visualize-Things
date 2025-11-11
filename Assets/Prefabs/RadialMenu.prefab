@@ -50,8 +50,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 895fd9fed435f8f4a93ef343fbd2517d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  ButtonPrefab: {fileID: 6989448317050374444, guid: ca3fe69262d59854fa267ebfb4511382, type: 3}
-  ButtonsParent: {fileID: 5292452291795060780}
+  CurrentHitPoint: {x: 0, y: 0, z: 0}
+  _buttonPrefab: {fileID: 6989448317050374444, guid: ca3fe69262d59854fa267ebfb4511382, type: 3}
+  _buttonsParent: {fileID: 5292452291795060780}
   _ovrCanvas: {fileID: 94008111788975646}
 --- !u!1 &1092075257410074480
 GameObject:
