@@ -10,10 +10,6 @@ public class RadialMenuController : MonoBehaviour
     [SerializeField]
     private Transform _headPos;
     [SerializeField]
-    private OVRHand _ovrHandLeft;
-    [SerializeField]
-    private OVRHand _ovrHandRight;
-    [SerializeField]
     private PinchDetector _pinchDetector;
     [SerializeField]
     private RadialMenuDefinition _primaryRadialMenuDef;
@@ -39,7 +35,7 @@ public class RadialMenuController : MonoBehaviour
 
     }
 
-    private void OnPinch(object sender, OVRPlugin.Hand hand, OVRHand.HandFinger finger, bool state)
+    private void OnPinch(object sender, OVRPlugin.Hand hand, OVRHand.HandFinger finger, bool state, Transform pointerPose)
     {
         if (state)
         {
@@ -50,22 +46,8 @@ public class RadialMenuController : MonoBehaviour
                 OVRHand.HandFinger.Ring => RadialMenuKind.Secondary,
                 _ => throw new Exception($"Invalid finger {finger}")
             };
-            Transform handT = hand switch
-            {
-                OVRPlugin.Hand.HandLeft => _ovrHandLeft.PointerPose,
-                OVRPlugin.Hand.HandRight => _ovrHandRight.PointerPose,
-                _ => throw new Exception($"Invalid hand {hand}")
-            };
             _activeHand = hand;
-            ShowRadialMenu(kind, handT);
-        } else
-        {
-            if (hand != _activeHand)
-            {
-                return;
-            }
-            Debug.Log($"PINCH END!! {hand} {finger}");
-            HideRadialMenu();
+            ShowRadialMenu(kind, pointerPose);
         }
     }
 
@@ -73,12 +55,14 @@ public class RadialMenuController : MonoBehaviour
     {
         if (_radialMenu != null)
         {
-            return;
+            HideRadialMenu();
         }
         Debug.Log("HERE!");
         _radialMenu = Instantiate(_radialMenuPrefab);
         _radialMenu.transform.position = hand.position;
         _radialMenu.transform.LookAt(_headPos);
+        // back off a bit so the hand is clearly in front of the menu and not inside/behind it
+        _radialMenu.transform.Translate(0, 0, -0.1f, _radialMenu.transform);
         _radialMenu.GetComponent<RadialMenu>().Populate(_primaryRadialMenuDef);
     }
 
@@ -86,7 +70,7 @@ public class RadialMenuController : MonoBehaviour
     {
         if (_radialMenu != null)
         {
-            GameObject.Destroy(_radialMenu);
+            Destroy(_radialMenu);
         }
     }
 
