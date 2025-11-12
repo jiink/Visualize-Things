@@ -2,7 +2,9 @@ using Oculus.Interaction;
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using static RadialButtonData;
 
+public delegate void RadialButtonEventHandler(object sender, RmSelection id);
 public class RadialMenu : MonoBehaviour
 {
     [SerializeField]
@@ -14,7 +16,7 @@ public class RadialMenu : MonoBehaviour
 
     private RadialButtonData.RmSelection _currentSelection;
 
-    public event EventHandler SelectionConfirmedEvent;
+    public event RadialButtonEventHandler SelectionEvent;
 
 
     void Start()
@@ -38,9 +40,11 @@ public class RadialMenu : MonoBehaviour
         for (int i = 0; i < numBtns; i++)
         {
             float angle = (float)(i / (float)numBtns * (360.0f));
-            //float angle = 30;
             RadialMenuOption newb = Instantiate(_buttonPrefab, _buttonsParent).GetComponent<RadialMenuOption>();
             newb.Populate(def.buttons[i], angle);
+            newb.Button.WhenUnselect.AddListener(() => { 
+                SelectionEvent.Invoke(this, newb.Id);
+            });
         }
     }
 

@@ -63,9 +63,11 @@ public class RadialMenuController : MonoBehaviour
         _radialMenu.transform.LookAt(_headPos);
         // back off a bit so the hand is clearly in front of the menu and not inside/behind it
         _radialMenu.transform.Translate(0, 0, -0.1f, _radialMenu.transform);
-        _radialMenu.GetComponent<RadialMenu>().Populate(_primaryRadialMenuDef);
+        RadialMenu rm = _radialMenu.GetComponent<RadialMenu>();
+        rm.Populate(_primaryRadialMenuDef);
+        rm.SelectionEvent += OnMenuSelection;
     }
-
+   
     private void HideRadialMenu()
     {
         if (_radialMenu != null)
@@ -73,6 +75,19 @@ public class RadialMenuController : MonoBehaviour
             Destroy(_radialMenu);
         }
     }
+
+    private void OnMenuSelection(object sender, RadialButtonData.RmSelection id)
+    {
+        switch (id)
+        {
+            case RadialButtonData.RmSelection.LoadModel:
+                break;
+            default:
+                Debug.Log($"Unimplemented selection {id}");
+                break;
+        }
+    }
+
 
     public void PrintSomething(string text)
     {
