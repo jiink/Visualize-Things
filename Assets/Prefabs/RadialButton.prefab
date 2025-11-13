@@ -496,6 +496,8 @@ MonoBehaviour:
   KeepUpright:
   - {fileID: 971502759125650856}
   - {fileID: 6740555164493422279}
+  Button: {fileID: 9030968210307052932}
+  Id: 0
 --- !u!1001 &6878580730378660991
 PrefabInstance:
   m_ObjectHideFlags: 0

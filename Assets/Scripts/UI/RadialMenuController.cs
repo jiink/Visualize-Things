@@ -81,6 +81,7 @@ public class RadialMenuController : MonoBehaviour
         switch (id)
         {
             case RadialButtonData.RmSelection.LoadModel:
+                Services.Get<UiManagerService>().ShowFileBrowser();
                 break;
             default:
                 Debug.Log($"Unimplemented selection {id}");

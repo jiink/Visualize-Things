@@ -8,7 +8,7 @@ public class UiManagerService : MonoBehaviour
     {
         GameObject fb = Instantiate(_fileBrowserPrefab);
         Transform head = Camera.main.transform;
-        fb.transform.position = head.position + head.forward * 0.75f;
+        fb.transform.position = head.position + head.forward * 0.35f;
         fb.transform.LookAt(head);
         return fb;
     }

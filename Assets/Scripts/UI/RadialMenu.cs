@@ -44,6 +44,7 @@ public class RadialMenu : MonoBehaviour
             newb.Populate(def.buttons[i], angle);
             newb.Button.WhenUnselect.AddListener(() => { 
                 SelectionEvent.Invoke(this, newb.Id);
+                Destroy(gameObject);
             });
         }
     }
