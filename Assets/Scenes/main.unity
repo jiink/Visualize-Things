@@ -459,6 +459,7 @@ GameObject:
   m_Component:
   - component: {fileID: 360901440}
   - component: {fileID: 360901439}
+  - component: {fileID: 360901441}
   m_Layer: 0
   m_Name: '[Services]'
   m_TagString: Untagged
@@ -478,7 +479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f899ab60f2f88574abbaf00c92f25331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  _fileBrowserPrefab: {fileID: 0}
+  _fileBrowserPrefab: {fileID: 8196295445986136037, guid: 6cbfa921f3c89464ca2149871b35e7a9, type: 3}
 --- !u!4 &360901440
 Transform:
   m_ObjectHideFlags: 0
@@ -494,6 +495,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &360901441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360901438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24d881d7eadb9c74c9e3a8a9eea50e8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ServiceRegistrar
 --- !u!1 &417442056
 GameObject:
   m_ObjectHideFlags: 0
