@@ -58,7 +58,6 @@ public class RadialMenuController : MonoBehaviour
         {
             HideRadialMenu();
         }
-        Debug.Log("HERE!");
         _radialMenu = Instantiate(_radialMenuPrefab);
         _radialMenu.transform.position = hand.position;
         _radialMenu.transform.LookAt(_headPos);

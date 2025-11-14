@@ -10,6 +10,7 @@ public class UiManagerService : MonoBehaviour
         Transform head = Camera.main.transform;
         fb.transform.position = head.position + head.forward * 0.35f;
         fb.transform.LookAt(head);
+        fb.transform.Rotate(0, 180, 0);
         return fb;
     }
 }
