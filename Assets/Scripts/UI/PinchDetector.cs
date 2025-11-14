@@ -18,25 +18,32 @@ public class PinchDetector : MonoBehaviour
 
     void Update()
     {
+        if (OVRInput.GetDown(OVRInput.Button.Start, OVRInput.Controller.LHand))
+        {
+            PinchEvent.Invoke(this, OVRPlugin.Hand.HandLeft, OVRHand.HandFinger.Index, true, _ovrHandLeft.PointerPose);
+        } else if (OVRInput.GetDown(OVRInput.Button.Start, OVRInput.Controller.RHand))
+        {
+            PinchEvent.Invoke(this, OVRPlugin.Hand.HandRight, OVRHand.HandFinger.Index, true, _ovrHandRight.PointerPose);
+        }
     }
 
     public void LeftMiddlePinch(bool state)
     {
-        PinchEvent.Invoke(this, OVRPlugin.Hand.HandLeft, OVRHand.HandFinger.Middle, state, _ovrHandLeft.PointerPose);
+        //PinchEvent.Invoke(this, OVRPlugin.Hand.HandLeft, OVRHand.HandFinger.Middle, state, _ovrHandLeft.PointerPose);
     }
 
     public void LeftRingPinch(bool state)
     {
-        PinchEvent.Invoke(this, OVRPlugin.Hand.HandLeft, OVRHand.HandFinger.Ring, state, _ovrHandLeft.PointerPose);
+        //PinchEvent.Invoke(this, OVRPlugin.Hand.HandLeft, OVRHand.HandFinger.Ring, state, _ovrHandLeft.PointerPose);
     }
 
     public void RightMiddlePinch(bool state)
     {
-        PinchEvent.Invoke(this, OVRPlugin.Hand.HandRight, OVRHand.HandFinger.Middle, state, _ovrHandRight.PointerPose);
+        //PinchEvent.Invoke(this, OVRPlugin.Hand.HandRight, OVRHand.HandFinger.Middle, state, _ovrHandRight.PointerPose);
     }
 
     public void RightRingPinch(bool state)
     {
-        PinchEvent.Invoke(this, OVRPlugin.Hand.HandRight, OVRHand.HandFinger.Ring, state, _ovrHandRight.PointerPose);
+        //PinchEvent.Invoke(this, OVRPlugin.Hand.HandRight, OVRHand.HandFinger.Ring, state, _ovrHandRight.PointerPose);
     }
 }

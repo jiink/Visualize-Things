@@ -42,6 +42,7 @@ public class RadialMenuController : MonoBehaviour
             Debug.Log($"PINCH BEGIN!! {hand} {finger}");
             RadialMenuKind kind = finger switch
             {
+                OVRHand.HandFinger.Index => RadialMenuKind.Primary,
                 OVRHand.HandFinger.Middle => RadialMenuKind.Primary,
                 OVRHand.HandFinger.Ring => RadialMenuKind.Secondary,
                 _ => throw new Exception($"Invalid finger {finger}")
