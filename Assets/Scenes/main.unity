@@ -147,7 +147,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.352, y: 1, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_LocalScale: {x: 0.1107875, y: 0.1107875, z: 0.1107875}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1316145569}
@@ -523,6 +523,7 @@ GameObject:
   - component: {fileID: 360901440}
   - component: {fileID: 360901439}
   - component: {fileID: 360901441}
+  - component: {fileID: 360901442}
   m_Layer: 0
   m_Name: '[Services]'
   m_TagString: Untagged
@@ -542,7 +543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f899ab60f2f88574abbaf00c92f25331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  _fileBrowserPrefab: {fileID: 6706405681912288125, guid: 4ba39439fd9d1c248874802f25231dd8, type: 3}
+  _fileBrowserPrefab: {fileID: 5471542551109582591, guid: 1be4366555de598488e74b58c8300e3b, type: 3}
 --- !u!4 &360901440
 Transform:
   m_ObjectHideFlags: 0
@@ -570,6 +571,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24d881d7eadb9c74c9e3a8a9eea50e8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ServiceRegistrar
+--- !u!114 &360901442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360901438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1c2568aaf667864fbe476245dfa4d7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ModelLoadingService
+  _modelTemplatePrefab: {fileID: 1639613858398016647, guid: d1692214e39ec4948a7955ae8c6bf9f8, type: 3}
+  _cubeVisualizerPrefab: {fileID: 6909874767696000249, guid: b7a1ffde7a0ddb541b70d40df193178e, type: 3}
+  _occlusionFriendlyLit: {fileID: 2100000, guid: a41b0f2c3f351f74286bbae865221eef, type: 2}
+  _modelLoadingIndicator: {fileID: 4032668332702433474, guid: 61e4b8972971271438c407497772e2d2, type: 3}
 --- !u!1 &417442056
 GameObject:
   m_ObjectHideFlags: 0
@@ -2153,8 +2170,8 @@ Transform:
   m_GameObject: {fileID: 1482112250}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.431, y: 1, z: -0.423}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_LocalPosition: {x: -0.394, y: 1.048, z: -0.115}
+  m_LocalScale: {x: 0.09974, y: 0.09974, z: 0.09974}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1316145569}

@@ -82,7 +82,7 @@ public class RadialMenuController : MonoBehaviour
         {
             case RadialButtonData.RmSelection.LoadModel:
                 Services.Get<UiManagerService>().ShowFileBrowser(
-                    (path, pos) => Services.Get<ModelLoadingService>().ImportModelAsync(path, pos)
+                    (path, pos) => Services.Get<ModelLoadingService>().ImportModelAsync(path, pos).ConfigureAwait(false)
                 );
                 break;
             default:

@@ -5,6 +5,18 @@ TagManager:
   serializedVersion: 3
   tags:
   - QDSUIBackplateGradient
+  - QDSUIDestructiveButton
+  - QDSUISharedThemeColor
+  - QDSUISecondaryButton
+  - QDSUIIcon
+  - QDSUIToggleButton
+  - QDSUIPrimaryButton
+  - QDSUIAccentColor
+  - QDSUITextInvertedColor
+  - QDSUITextSecondaryInvertedColor
+  - QDSUITextSecondaryColor
+  - SelectionVisualizer
+  - SelectableObject
   layers:
   - Default
   - TransparentFX
@@ -12,7 +24,7 @@ TagManager:
   - Overlay UI
   - Water
   - UI
-  - 
+  - Models
   - 
   - 
   - 
