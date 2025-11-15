@@ -5,6 +5,7 @@ public class ServiceRegistrar : MonoBehaviour
     void Awake()
     {
         RegisterService<UiManagerService>();
+        RegisterService<ModelLoadingService>();
     }
 
     private void RegisterService<T>() where T : class
