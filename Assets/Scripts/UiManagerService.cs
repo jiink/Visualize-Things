@@ -26,7 +26,7 @@ public class UiManagerService : MonoBehaviour
         GameObject pr = Instantiate(_pcConnectionPromptPrefab, spawnTransform);
         PcConnectionPrompt prompt = pr.GetComponent<PcConnectionPrompt>();
         pr.transform.Rotate(0, 180, 0);
-        pr.transform.position += pr.transform.forward * -0.02f;
+        pr.transform.position += pr.transform.forward * -0.1f;
         prompt.Populate(ip, hostname);
     }
 }

@@ -96,22 +96,6 @@ public class QrService : MonoBehaviour
         if (IPAddress.TryParse(payload, out IPAddress _))
         {
             return true;
-            //byte[] octets = address.GetAddressBytes();
-            // Class A: 10.0.0.0 to 10.255.255.255
-            //if (octets.Length == 4 && octets[0] == 10)
-            //{
-            //    return true;
-            //}
-            //// Class B: 172.16.0.0 to 172.31.255.255
-            //if (octets.Length == 4 && octets[0] == 172 && octets[1] >= 16 && octets[1] <= 31)
-            //{
-            //    return true;
-            //}
-            //// Class C: 192.168.0.0 to 192.168.255.255
-            //if (octets.Length == 4 && octets[0] == 192 && octets[1] == 168)
-            //{
-            //    return true;
-            //}
         }
         return false;
     }
@@ -124,10 +108,6 @@ public class QrService : MonoBehaviour
         {
             return;
         }
-        //var instance = Instantiate(_qrCodePrefab, trackable.transform);
-        //var qrCode = instance.GetComponent<QRCode>();
-        //qrCode.Initialize(trackable);
-        //instance.GetComponent<Bounded2DVisualizer>().Initialize(trackable);
         Debug.Log($"{nameof(OnTrackableAdded)}: QRCode tracked!\nUUID={trackable.Anchor.Uuid}\nData={trackable.MarkerPayloadString}");
         // see if this is qr code is even relevant to us
         if (!IsPayloadRelevant(trackable.MarkerPayloadString))
