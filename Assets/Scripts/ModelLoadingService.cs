@@ -1,9 +1,7 @@
 ﻿using Oculus.Interaction.Surfaces;
 using System.IO;
 using System.Threading.Tasks;
-using System;
 using TriLibCore;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 public class ModelLoadingService : MonoBehaviour

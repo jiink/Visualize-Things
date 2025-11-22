@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public delegate void HandPinchEventHandler(object sender, OVRPlugin.Hand hand, OVRHand.HandFinger finger, bool state, Transform pointerPose);
