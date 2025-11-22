@@ -79,8 +79,9 @@ public class CommsService : MonoBehaviour
         }
     }
 
-    public async void InitConnection(string pcIpAddress)
+    public async Task<string> InitConnection(string pcIpAddress)
     {
+        string err = "";
         if (_activePcClient != null && _activePcClient.Connected)
         {
             Debug.LogWarning($"Cutting existing connection.");
@@ -99,8 +100,10 @@ public class CommsService : MonoBehaviour
         catch (Exception e)
         {
             Debug.LogError($"Couldn't init connection with {pcIpAddress}: {e.Message}");
+            err = e.Message;
             DisposeConnection();
         }
+        return err;
     }
     public void DisposeConnection()
     {
