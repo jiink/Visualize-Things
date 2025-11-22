@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -123,5 +124,27 @@ public class CommsService : MonoBehaviour
     private void OnDestroy()
     {
         DisposeConnection();
+    }
+
+    public string IpStrToHostname(string ipAddr)
+    {
+        try
+        {
+            IPAddress ipAddress = IPAddress.Parse(ipAddr);
+            IPHostEntry hostEntry = Dns.GetHostEntry(ipAddress);
+            return hostEntry.HostName;
+        }
+        catch (System.Net.Sockets.SocketException)
+        {
+            return "No name";
+        }
+        catch (FormatException)
+        {
+            return "Bad address";
+        }
+        catch (Exception ex)
+        {
+            return $"Exception: {ex.Message}";
+        }
     }
 }

@@ -1,5 +1,6 @@
 using Meta.XR.MRUtilityKit;
 using System;
+using System.Net;
 using UnityEngine;
 
 public class QrService : MonoBehaviour
@@ -90,6 +91,33 @@ public class QrService : MonoBehaviour
 #endif // UNITY_EDITOR
     }
 
+    private bool IsPayloadRelevant(string payload)
+    {
+        if (IPAddress.TryParse(payload, out IPAddress _))
+        {
+            return true;
+            //byte[] octets = address.GetAddressBytes();
+            // Class A: 10.0.0.0 to 10.255.255.255
+            //if (octets.Length == 4 && octets[0] == 10)
+            //{
+            //    return true;
+            //}
+            //// Class B: 172.16.0.0 to 172.31.255.255
+            //if (octets.Length == 4 && octets[0] == 172 && octets[1] >= 16 && octets[1] <= 31)
+            //{
+            //    return true;
+            //}
+            //// Class C: 192.168.0.0 to 192.168.255.255
+            //if (octets.Length == 4 && octets[0] == 192 && octets[1] == 168)
+            //{
+            //    return true;
+            //}
+        }
+        return false;
+    }
+
+    
+
     public void OnTrackableAdded(MRUKTrackable trackable)
     {
         if (trackable.TrackableType != OVRAnchor.TrackableType.QRCode)
@@ -101,7 +129,18 @@ public class QrService : MonoBehaviour
         //qrCode.Initialize(trackable);
         //instance.GetComponent<Bounded2DVisualizer>().Initialize(trackable);
         Debug.Log($"{nameof(OnTrackableAdded)}: QRCode tracked!\nUUID={trackable.Anchor.Uuid}\nData={trackable.MarkerPayloadString}");
+        // see if this is qr code is even relevant to us
+        if (!IsPayloadRelevant(trackable.MarkerPayloadString))
+        {
+            Debug.LogWarning("Irrelevant payload");
+            return;
+        }
+        string ip = trackable.MarkerPayloadString;
+        string hostname = Services.Get<CommsService>().IpStrToHostname(ip);
+        Services.Get<UiManagerService>().ShowConnectionPrompt(trackable.transform, ip, hostname);
     }
+
+
 
     public void OnTrackableRemoved(MRUKTrackable trackable)
     {
@@ -109,8 +148,8 @@ public class QrService : MonoBehaviour
         {
             return;
         }
-        Debug.Log($"{nameof(OnTrackableRemoved)}: {trackable.Anchor.Uuid.ToString("N").Remove(8)}[..]");
-        Destroy(trackable.gameObject);
+        Debug.Log($">>>>>>>{nameof(OnTrackableRemoved)}: {trackable.Anchor.Uuid.ToString("N").Remove(8)}[..]");
+        //Destroy(trackable.gameObject);
     }
 
 }

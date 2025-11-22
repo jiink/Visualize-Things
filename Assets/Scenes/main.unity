@@ -457,6 +457,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   _fileBrowserPrefab: {fileID: 5471542551109582591, guid: 1be4366555de598488e74b58c8300e3b, type: 3}
+  _pcConnectionPromptPrefab: {fileID: 3026460589919376060, guid: bc44ad9007493ab4c9b091a732905b9f, type: 3}
 --- !u!4 &360901440
 Transform:
   m_ObjectHideFlags: 0

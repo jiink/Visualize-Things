@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 
 public class UiManagerService : MonoBehaviour
 {
     [SerializeField] private GameObject _fileBrowserPrefab;
+    [SerializeField] GameObject _pcConnectionPromptPrefab;
 
     public GameObject ShowFileBrowser(System.Action<string, Vector3> onFileSelectedCallback)
     {
@@ -18,5 +20,14 @@ public class UiManagerService : MonoBehaviour
             Destroy(fb);
         };
         return fb;
+    }
+
+    internal void ShowConnectionPrompt(Transform spawnTransform, string ip, string hostname)
+    {
+        GameObject pr = Instantiate(_pcConnectionPromptPrefab, spawnTransform);
+        PcConnectionPrompt prompt = pr.GetComponent<PcConnectionPrompt>();
+        pr.transform.Rotate(0, 180, 0);
+        pr.transform.position += pr.transform.forward * -0.02f;
+        prompt.Populate(ip, hostname);
     }
 }
