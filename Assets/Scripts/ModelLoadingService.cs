@@ -102,7 +102,7 @@ public class ModelLoadingService : MonoBehaviour
         colliderVisualizer.transform.SetParent(template.transform);
         colliderVisualizer.transform.localPosition = boxCollider.center;
         colliderVisualizer.transform.localScale = boxCollider.size;
-        colliderVisualizer.SetActive(false);
+        //colliderVisualizer.SetActive(false);
 
         return template;
     }

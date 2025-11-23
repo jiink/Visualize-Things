@@ -565,6 +565,46 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8545918304231150386, guid: 5fca3702cdf1a214a94e69dcfa704e17, type: 3}
+      propertyPath: _hoverColorState.Color.a
+      value: 0.92156863
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545918304231150386, guid: 5fca3702cdf1a214a94e69dcfa704e17, type: 3}
+      propertyPath: _hoverColorState.Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545918304231150386, guid: 5fca3702cdf1a214a94e69dcfa704e17, type: 3}
+      propertyPath: _hoverColorState.Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545918304231150386, guid: 5fca3702cdf1a214a94e69dcfa704e17, type: 3}
+      propertyPath: _hoverColorState.Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545918304231150386, guid: 5fca3702cdf1a214a94e69dcfa704e17, type: 3}
+      propertyPath: _normalColorState.Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545918304231150386, guid: 5fca3702cdf1a214a94e69dcfa704e17, type: 3}
+      propertyPath: _normalColorState.Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545918304231150386, guid: 5fca3702cdf1a214a94e69dcfa704e17, type: 3}
+      propertyPath: _normalColorState.Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545918304231150386, guid: 5fca3702cdf1a214a94e69dcfa704e17, type: 3}
+      propertyPath: _selectColorState.Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545918304231150386, guid: 5fca3702cdf1a214a94e69dcfa704e17, type: 3}
+      propertyPath: _selectColorState.Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545918304231150386, guid: 5fca3702cdf1a214a94e69dcfa704e17, type: 3}
+      propertyPath: _selectColorState.Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8886810577242953562, guid: 5fca3702cdf1a214a94e69dcfa704e17, type: 3}
       propertyPath: _width
       value: 1

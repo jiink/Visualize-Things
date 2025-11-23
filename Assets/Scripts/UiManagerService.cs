@@ -4,6 +4,21 @@ public class UiManagerService : MonoBehaviour
 {
     [SerializeField] private GameObject _fileBrowserPrefab;
     [SerializeField] GameObject _pcConnectionPromptPrefab;
+    [SerializeField] private OVRHand _ovrHandLeft;
+    [SerializeField] private OVRHand _ovrHandRight;
+    [SerializeField] private OVRCameraRig _ovrCamRig;
+
+    // global pos
+    public Vector3 LeftPointerPos => _ovrCamRig.trackingSpace.TransformPoint(_ovrHandLeft.PointerPose.position);
+    public Vector3 RightPointerPos => _ovrCamRig.trackingSpace.TransformPoint(_ovrHandRight.PointerPose.position);
+
+    void OnValidate()
+    {
+        if (_ovrCamRig == null)
+        {
+            _ovrCamRig = FindFirstObjectByType<OVRCameraRig>();
+        }
+    }
 
     public GameObject ShowFileBrowser(System.Action<string, Vector3> onFileSelectedCallback)
     {
