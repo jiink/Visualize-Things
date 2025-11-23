@@ -11,8 +11,20 @@ public class ModelLoadingService : MonoBehaviour
     [SerializeField] private GameObject _cubeVisualizerPrefab;
     [SerializeField] private UnityEngine.Material _occlusionFriendlyLit;
     [SerializeField] private GameObject _modelLoadingIndicator;
+    // for organization in the hierarchy
+    [SerializeField] private GameObject _wrapperObject; 
 
     private GameObject _loadingIndicator;
+    private AssetLoaderOptions _trilibAssetLoaderOptions;
+
+    void Start()
+    {
+        _trilibAssetLoaderOptions = new()
+        {
+            GenerateColliders = false,
+            ConvexColliders = false
+        };
+    }
 
     // Returns the loaded model object once its done loading.
     public async Task<GameObject> ImportModelAsync(string filePath, Vector3 position)
@@ -59,7 +71,9 @@ public class ModelLoadingService : MonoBehaviour
                 _loadingIndicatorC.Text = "Failed to load model: " + error;
                 Destroy(_loadingIndicator, 8.0f);
                 tcs.SetResult(null);
-            });
+            },
+            null,
+            _trilibAssetLoaderOptions);
         return await tcs.Task;
     }
 
@@ -72,7 +86,7 @@ public class ModelLoadingService : MonoBehaviour
             return null;
         }
 
-        GameObject template = Instantiate(_modelTemplatePrefab);
+        GameObject template = Instantiate(_modelTemplatePrefab, _wrapperObject.transform);
         loadedModel.transform.SetParent(template.transform);
 
         Bounds bounds = new(loadedModel.transform.position, Vector3.zero);
