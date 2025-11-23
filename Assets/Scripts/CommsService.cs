@@ -191,7 +191,7 @@ public class CommsService : MonoBehaviour
             }
             using (FileStream fs = new(savePath, FileMode.Create, FileAccess.Write))
             {
-                byte[] buffer = new byte[8192];
+                byte[] buffer = new byte[65536];
                 long totalRead = 0;
                 var sw = System.Diagnostics.Stopwatch.StartNew();
                 long lastLogTime = 0;
@@ -237,6 +237,8 @@ public class CommsService : MonoBehaviour
         try
         {
             _activePcClient = new TcpClient();
+            _activePcClient.NoDelay = true;
+            _activePcClient.ReceiveBufferSize = 65536;
             var connectTask = _activePcClient.ConnectAsync(pcIpAddress, REALIVATION_PORT);
             if (await Task.WhenAny(connectTask, Task.Delay(5000)) != connectTask)
             {
