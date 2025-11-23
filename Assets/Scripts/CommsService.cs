@@ -189,7 +189,7 @@ public class CommsService : MonoBehaviour
                     throw;
                 }
             }
-            using (FileStream fs = new(savePath, FileMode.Create, FileAccess.Write))
+            using (FileStream fs = new(savePath, FileMode.Create, FileAccess.Write, FileShare.None, 1048576, true))
             {
                 byte[] buffer = new byte[65536];
                 long totalRead = 0;
@@ -198,10 +198,10 @@ public class CommsService : MonoBehaviour
                 while (totalRead < contentLen)
                 {
                     int toRead = (int)Math.Min(buffer.Length, contentLen - totalRead);
-                    int read = await stream.ReadAsync(buffer, 0, toRead, ct);
+                    int read = await stream.ReadAsync(buffer, 0, toRead, ct).ConfigureAwait(false);
                     if (read == 0) throw new EndOfStreamException("Stream closed during file download");
 
-                    await fs.WriteAsync(buffer, 0, read, ct);
+                    await fs.WriteAsync(buffer, 0, read, ct).ConfigureAwait(false);
                     totalRead += read;
                     if (sw.ElapsedMilliseconds - lastLogTime > 500)
                     {
@@ -250,7 +250,7 @@ public class CommsService : MonoBehaviour
             await SendQuestConfirmationAsync(_activeStream);
             _heartbeatCts = new();
             _ = HeartbeatLoopAsync(_heartbeatCts.Token);
-            _ = ReceiveLoopAsync(_heartbeatCts.Token);
+            _ = Task.Run(() => ReceiveLoopAsync(_heartbeatCts.Token));
         }
         catch (Exception e)
         {
