@@ -33,7 +33,7 @@ public class RadialMenuController : MonoBehaviour
 
     }
 
-    private void OnPinch(object sender, OVRPlugin.Hand hand, OVRHand.HandFinger finger, bool state, Transform pointerPose)
+    private void OnPinch(object sender, OVRPlugin.Hand hand, OVRHand.HandFinger finger, bool state, Vector3 pointerPose)
     {
         if (state)
         {
@@ -50,14 +50,14 @@ public class RadialMenuController : MonoBehaviour
         }
     }
 
-    private void ShowRadialMenu(RadialMenuKind kind, Transform hand)
+    private void ShowRadialMenu(RadialMenuKind kind, Vector3 hand)
     {
         if (_radialMenu != null)
         {
             HideRadialMenu();
         }
         _radialMenu = Instantiate(_radialMenuPrefab);
-        _radialMenu.transform.position = hand.position;
+        _radialMenu.transform.position = hand;
         _radialMenu.transform.LookAt(_headPos);
         // back off a bit so the hand is clearly in front of the menu and not inside/behind it
         _radialMenu.transform.Translate(0, 0, -0.1f, _radialMenu.transform);

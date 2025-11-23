@@ -129,7 +129,10 @@ public class QrService : MonoBehaviour
             return;
         }
         Debug.Log($">>>>>>>{nameof(OnTrackableRemoved)}: {trackable.Anchor.Uuid.ToString("N").Remove(8)}[..]");
-        //Destroy(trackable.gameObject);
+        Destroy(trackable.gameObject);
     }
-
+    public void PrintThing(string thing)
+    {
+        Debug.LogError(thing);
+    }
 }

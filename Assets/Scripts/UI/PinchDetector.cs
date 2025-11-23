@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public delegate void HandPinchEventHandler(object sender, OVRPlugin.Hand hand, OVRHand.HandFinger finger, bool state, Transform pointerPose);
+public delegate void HandPinchEventHandler(object sender, OVRPlugin.Hand hand, OVRHand.HandFinger finger, bool state, Vector3 pointerPose);
 
 public class PinchDetector : MonoBehaviour
 {
@@ -8,8 +8,17 @@ public class PinchDetector : MonoBehaviour
     private OVRHand _ovrHandLeft;
     [SerializeField]
     private OVRHand _ovrHandRight;
+    [SerializeField] private OVRCameraRig _ovrCamRig;
 
     public event HandPinchEventHandler PinchEvent;
+
+    void OnValidate()
+    {
+        if (_ovrCamRig == null)
+        {
+            _ovrCamRig = FindFirstObjectByType<OVRCameraRig>();
+        }
+    }
 
     void Start()
     {
@@ -19,10 +28,14 @@ public class PinchDetector : MonoBehaviour
     {
         if (OVRInput.GetDown(OVRInput.Button.Start, OVRInput.Controller.LHand))
         {
-            PinchEvent.Invoke(this, OVRPlugin.Hand.HandLeft, OVRHand.HandFinger.Index, true, _ovrHandLeft.PointerPose);
+            PinchEvent.Invoke(this,
+                OVRPlugin.Hand.HandLeft,
+                OVRHand.HandFinger.Index,
+                true,
+                _ovrCamRig.trackingSpace.TransformPoint(_ovrHandLeft.PointerPose.position));
         } else if (OVRInput.GetDown(OVRInput.Button.Start, OVRInput.Controller.RHand))
         {
-            PinchEvent.Invoke(this, OVRPlugin.Hand.HandRight, OVRHand.HandFinger.Index, true, _ovrHandRight.PointerPose);
+            PinchEvent.Invoke(this, OVRPlugin.Hand.HandRight, OVRHand.HandFinger.Index, true, _ovrHandRight.PointerPose.position);
         }
     }
 

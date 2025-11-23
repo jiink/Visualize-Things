@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpawnOnStart: 1
-  MeshMaterial: {fileID: 2100000, guid: 599b01c5f1d17436c89b88cc04257314, type: 2}
+  MeshMaterial: {fileID: 2100000, guid: bd85c2b96e1ab7d409ce63202fd73c19, type: 2}
   Colliders: 0
   CutHoles: 0
   castShadows: 0
@@ -1194,6 +1194,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PinchDetector
   _ovrHandLeft: {fileID: 1521450726}
   _ovrHandRight: {fileID: 221755048}
+  _ovrCamRig: {fileID: 1337003223}
 --- !u!1 &790098703
 GameObject:
   m_ObjectHideFlags: 0
@@ -1782,13 +1783,25 @@ MonoBehaviour:
     SceneJson: 
     <TrackerConfiguration>k__BackingField:
       <KeyboardTrackingEnabled>k__BackingField: 0
-      <QRCodeTrackingEnabled>k__BackingField: 0
+      <QRCodeTrackingEnabled>k__BackingField: 1
     <TrackableAdded>k__BackingField:
       m_PersistentCalls:
         m_Calls: []
     <TrackableRemoved>k__BackingField:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 360901444}
+          m_TargetAssemblyTypeName: QrService, Assembly-CSharp
+          m_MethodName: PrintThing
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '>>>>>>>> THING ON STRING'
+            m_BoolArgument: 0
+          m_CallState: 2
   _immersiveSceneDebuggerPrefab: {fileID: 7641788235762528044, guid: 950d12aea00a70449b5b7b746f142acf, type: 3}
 --- !u!114 &1238954336
 MonoBehaviour:

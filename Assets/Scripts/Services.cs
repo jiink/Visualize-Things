@@ -5,7 +5,7 @@ using UnityEngine;
 public static class Services
 {
     private static readonly Dictionary<Type, object> _services = new();
-
+    public const string TransferDirName = "TransferDirectory";
     public static void Register<T>(T service) where T : class
     {
         var type = typeof(T);

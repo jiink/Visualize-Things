@@ -97,7 +97,7 @@ public class FileBrowser : MonoBehaviour
 
     void Start()
     {
-        string targetDirectory = Path.Combine(Application.persistentDataPath, "TransferDirectory");
+        string targetDirectory = Path.Combine(Application.persistentDataPath, Services.TransferDirName);
         if (!Directory.Exists(targetDirectory))
         {
             Directory.CreateDirectory(targetDirectory);
