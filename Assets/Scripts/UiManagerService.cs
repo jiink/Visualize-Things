@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class UiManagerService : MonoBehaviour
@@ -11,6 +12,8 @@ public class UiManagerService : MonoBehaviour
     // global pos
     public Vector3 LeftPointerPos => _ovrCamRig.trackingSpace.TransformPoint(_ovrHandLeft.PointerPose.position);
     public Vector3 RightPointerPos => _ovrCamRig.trackingSpace.TransformPoint(_ovrHandRight.PointerPose.position);
+    public Quaternion LeftPointerRot => _ovrHandLeft.PointerPose.rotation;
+    public Quaternion RightPointerRot => _ovrHandRight.PointerPose.rotation;
 
     void OnValidate()
     {
@@ -43,5 +46,10 @@ public class UiManagerService : MonoBehaviour
         pr.transform.Rotate(0, 180, 0);
         pr.transform.position += pr.transform.forward * -0.1f;
         prompt.Populate(ip, hostname);
+    }
+
+    internal void ShowContextMenu(GameObject ob)
+    {
+        throw new NotImplementedException();
     }
 }

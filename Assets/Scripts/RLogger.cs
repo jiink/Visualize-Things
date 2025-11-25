@@ -32,6 +32,10 @@ public class RLogger : MonoBehaviour
 
     public void Log(object message, LogType type = LogType.Log)
     {
+        if ($"{message}".Contains("XrEventDataSpaceQueryCompleteFB"))
+        {
+            return;
+        }
         // 1. Create the individual formatted line
         _totalLogCount++;
         string colorTag = null;

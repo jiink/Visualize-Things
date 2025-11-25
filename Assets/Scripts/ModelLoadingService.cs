@@ -1,8 +1,18 @@
 ﻿using Oculus.Interaction.Surfaces;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using TriLibCore;
 using UnityEngine;
+
+public class ModelSpawnedEventArgs : EventArgs
+{
+    public GameObject SpawnedModel { get; }
+    public ModelSpawnedEventArgs(GameObject spawnedModel)
+    {
+        SpawnedModel = spawnedModel;
+    }
+}
 
 public class ModelLoadingService : MonoBehaviour
 {
@@ -16,6 +26,8 @@ public class ModelLoadingService : MonoBehaviour
 
     private GameObject _loadingIndicator;
     private AssetLoaderOptions _trilibAssetLoaderOptions;
+
+    public event EventHandler<ModelSpawnedEventArgs> ModelSpawnedEvent;
 
     void Start()
     {
@@ -51,6 +63,7 @@ public class ModelLoadingService : MonoBehaviour
                     _loadingIndicatorC.Text = "Model loaded!";
                     Destroy(_loadingIndicator, 2.0f);
                     tcs.SetResult(loadedRoot);
+                    ModelSpawnedEvent?.Invoke(this, new ModelSpawnedEventArgs(loadedRoot));
                 }
                 else
                 {
@@ -101,9 +114,9 @@ public class ModelLoadingService : MonoBehaviour
         colliderSurface.InjectCollider(boxCollider);
 
         // Have Core listen to wselection events
-        SelectableModel selectableModel = template.GetComponent<SelectableModel>();
+        //SelectableModel selectableModel = template.GetComponent<SelectableModel>();
         //selectableModel.Selected += StrodeloCore.Instance.OnModelSelected;
-        selectableModel.modelFileSourcePath = filePath; // just so it can be saved later
+        //selectableModel.modelFileSourcePath = filePath; // just so it can be saved later
 
         //template.transform.position = UnityEngine.Camera.main.transform.position +
         //                                 (UnityEngine.Camera.main.transform.forward * 0.3f);
