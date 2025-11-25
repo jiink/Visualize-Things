@@ -71,9 +71,7 @@ public class ModelLoadingService : MonoBehaviour
                 _loadingIndicatorC.Text = "Failed to load model: " + error;
                 Destroy(_loadingIndicator, 8.0f);
                 tcs.SetResult(null);
-            },
-            null,
-            _trilibAssetLoaderOptions);
+            });
         return await tcs.Task;
     }
 
