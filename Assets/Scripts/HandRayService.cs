@@ -6,6 +6,13 @@ public class HandRayService : MonoBehaviour
 {
     [SerializeField] private RayInteractor _handRayInteractorLeft;
     [SerializeField] private RayInteractor _handRayInteractorRight;
+    [SerializeField] private RayInteractor _progressIndicatorPrefab;
+    private readonly float _requiredPinchTimeS = 1.0f;
+    private GameObject _hoveredObject = null;
+    private bool _isHoldingPinch = false;
+    private OVRHand.Hand _pinchHoldingHand = OVRHand.Hand.HandLeft;
+    private float _holdStartTime = 0.0f;
+    private RadialProgressIndicator _radialProgressIndicator;
     private void Start()
     {
         Services.Get<ModelLoadingService>().ModelSpawnedEvent += OnNewModelSpawned;
@@ -41,33 +48,60 @@ public class HandRayService : MonoBehaviour
     private void OnModelUnselected(GameObject ob, PointerEvent pe)
     {
         Debug.Log("<color=blue>object unselected</color>");
+        if (pe.Identifier == _handRayInteractorLeft.Identifier)
+        {
+            _pinchHoldingHand = OVRHand.Hand.HandLeft;
+        }
+        else if (pe.Identifier == _handRayInteractorRight.Identifier)
+        {
+            _pinchHoldingHand = OVRHand.Hand.HandRight;
+        }
+        else
+        {
+            Debug.LogError($"Couldn't match pointerevent identifier {pe.Identifier}");
+            _pinchHoldingHand = OVRHand.Hand.None;
+        }
+        Destroy(_radialProgressIndicator.gameObject);
     }
 
     // when your pinch starts
     private void OnModelSelected(GameObject ob, PointerEvent pe)
     {
         Debug.Log("<color=green>object selected!</color>");
-        Vector3 pointerP;
-        if (pe.Identifier == _handRayInteractorLeft.Identifier)
+        _holdStartTime = Time.time;
+    }
+
+    private void ShowContextMenu(GameObject currentHoveredObject, OVRHand.Hand pinchHoldingHand)
+    {
+        Vector3 pointerP = pinchHoldingHand switch
         {
-            pointerP = Services.Get<UiManagerService>().LeftPointerPos;
-        }
-        else if (pe.Identifier == _handRayInteractorRight.Identifier)
-        {
-            pointerP = Services.Get<UiManagerService>().RightPointerPos;
-        }
-        else
-        {
-            Debug.LogError($"Couldn't match pointerevent identifier {pe.Identifier}");
-            pointerP = Services.Get<UiManagerService>().RightPointerPos;
-        }
+            OVRHand.Hand.HandLeft => Services.Get<UiManagerService>().LeftPointerPos,
+            OVRHand.Hand.HandRight => Services.Get<UiManagerService>().RightPointerPos,
+            _ => throw new Exception("No hand?")
+        };
         Services.Get<UiManagerService>().ShowContextMenu(
-            ob,
+            currentHoveredObject,
             pointerP + (Camera.main.transform.forward * 0.1f)
         );
     }
 
     private void Update()
     {
+        if (_isHoldingPinch)
+        {
+            float elapsedTime = Time.time - _holdStartTime;
+            float progress = elapsedTime / _requiredPinchTimeS;
+            if (_radialProgressIndicator != null)
+            {
+                _radialProgressIndicator.Progress = progress;
+            }
+            if (elapsedTime >= _requiredPinchTimeS)
+            {
+                ShowContextMenu(_hoveredObject, _pinchHoldingHand);
+                _isHoldingPinch = false;
+                _hoveredObject = null;
+                Destroy(_radialProgressIndicator.gameObject);
+            }
+        }
     }
 }

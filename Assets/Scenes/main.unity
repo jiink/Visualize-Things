@@ -560,6 +560,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   _handRayInteractorLeft: {fileID: 632817513}
   _handRayInteractorRight: {fileID: 130820674}
+  _progressIndicatorPrefab: {fileID: 0}
 --- !u!1 &417442056
 GameObject:
   m_ObjectHideFlags: 0
