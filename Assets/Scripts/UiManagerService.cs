@@ -1,13 +1,25 @@
+using Oculus.Interaction;
 using System;
 using UnityEngine;
 
 public class UiManagerService : MonoBehaviour
 {
+    private enum RadialMenuKind
+    {
+        Primary,
+        Context
+    };
+
     [SerializeField] private GameObject _fileBrowserPrefab;
-    [SerializeField] GameObject _pcConnectionPromptPrefab;
+    [SerializeField] private GameObject _pcConnectionPromptPrefab;
+    [SerializeField] private GameObject _radialMenuPrefab;
     [SerializeField] private OVRHand _ovrHandLeft;
     [SerializeField] private OVRHand _ovrHandRight;
     [SerializeField] private OVRCameraRig _ovrCamRig;
+    [SerializeField] private PinchDetector _pinchDetector;
+    [SerializeField] private RadialMenuDefinition _primaryRadialMenuDef;
+    [SerializeField] private RadialMenuDefinition _contextRadialMenuDef;
+    private GameObject _currentRadialMenu;
 
     // global pos
     public Vector3 LeftPointerPos => _ovrCamRig.trackingSpace.TransformPoint(_ovrHandLeft.PointerPose.position);
@@ -21,6 +33,11 @@ public class UiManagerService : MonoBehaviour
         {
             _ovrCamRig = FindFirstObjectByType<OVRCameraRig>();
         }
+    }
+
+    private void Start()
+    {
+        _pinchDetector.PinchEvent += OnPinch;
     }
 
     public GameObject ShowFileBrowser(System.Action<string, Vector3> onFileSelectedCallback)
@@ -48,8 +65,75 @@ public class UiManagerService : MonoBehaviour
         prompt.Populate(ip, hostname);
     }
 
-    internal void ShowContextMenu(GameObject ob)
+    internal void ShowContextMenu(GameObject ob, Vector3 pos)
     {
-        throw new NotImplementedException();
+        ShowRadialMenu(RadialMenuKind.Context, pos, ob);
     }
+
+    private void OnPinch(object sender, OVRPlugin.Hand hand, OVRHand.HandFinger finger, bool state, Vector3 pointerPose)
+    {
+        if (state)
+        {
+            //Debug.Log($"PINCH BEGIN!! {hand} {finger}");
+            Vector3 slidBackPose = pointerPose + (Camera.main.transform.forward * 0.1f);
+            ShowRadialMenu(RadialMenuKind.Primary, slidBackPose, null);
+        }
+    }
+
+    private void ShowRadialMenu(RadialMenuKind kind, Vector3 pos, GameObject contextObj)
+    {
+        if (contextObj == null && kind == RadialMenuKind.Context)
+        {
+            Debug.LogError("Context object is null even though this is a context menu.");
+            return;
+        }
+        if (contextObj != null && kind != RadialMenuKind.Context)
+        {
+            Debug.LogWarning("Providing context object to a non-context menu.");
+        }
+        if (_currentRadialMenu != null)
+        {
+            HideRadialMenu();
+        }
+        _currentRadialMenu = Instantiate(_radialMenuPrefab);
+        _currentRadialMenu.transform.position = pos;
+        _currentRadialMenu.transform.LookAt(Camera.main.transform);
+        RadialMenu rm = _currentRadialMenu.GetComponent<RadialMenu>();
+        RadialMenuDefinition def = kind switch
+        {
+            RadialMenuKind.Primary => _primaryRadialMenuDef,
+            RadialMenuKind.Context => _contextRadialMenuDef,
+            _ => throw new Exception($"Unhandled radial menu kind {kind}"),
+        };
+        rm.Populate(def, contextObj);
+        rm.SelectionEvent += OnRadialMenuSelection;
+    }
+
+    private void HideRadialMenu()
+    {
+        if (_currentRadialMenu != null)
+        {
+            Destroy(_currentRadialMenu);
+        }
+    }
+
+    private void OnRadialMenuSelection(object sender, RadialButtonData.RmSelection id, GameObject contextObj)
+    {
+        switch (id)
+        {
+            case RadialButtonData.RmSelection.LoadModel:
+                Services.Get<UiManagerService>().ShowFileBrowser(
+                    (path, pos) => Services.Get<ModelLoadingService>().ImportModelAsync(path, pos).ConfigureAwait(false)
+                );
+                break;
+            case RadialButtonData.RmSelection.DeleteModel:
+                Destroy(contextObj);
+                Debug.Log("destroyed model");
+                break;
+            default:
+                Debug.Log($"Unimplemented selection {id}");
+                break;
+        }
+    }
+
 }

@@ -16,7 +16,11 @@ public struct RadialButtonData
         DeleteModel,
         PlaceOnSurface,
         Adjust,
-        Settings
+        OpenSettings,
+        Save,
+        Load,
+        ChangeOcclusion,
+        EditMaterials
     }
     public RmSelection id;
     public Sprite icon;

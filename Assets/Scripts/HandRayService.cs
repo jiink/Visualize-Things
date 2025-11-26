@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class HandRayService : MonoBehaviour
 {
+    [SerializeField] private RayInteractor _handRayInteractorLeft;
+    [SerializeField] private RayInteractor _handRayInteractorRight;
     private void Start()
     {
         Services.Get<ModelLoadingService>().ModelSpawnedEvent += OnNewModelSpawned;
@@ -27,7 +29,7 @@ public class HandRayService : MonoBehaviour
     // could happen twice in a row
     private void OnModelUnhovered(GameObject ob, PointerEvent pe)
     {
-        Debug.Log("object unhovered");
+        Debug.Log($"object unhovered.");
     }
 
     private void OnModelHovered(GameObject ob, PointerEvent pe)
@@ -45,7 +47,24 @@ public class HandRayService : MonoBehaviour
     private void OnModelSelected(GameObject ob, PointerEvent pe)
     {
         Debug.Log("<color=green>object selected!</color>");
-        Services.Get<UiManagerService>().ShowContextMenu(ob);
+        Vector3 pointerP;
+        if (pe.Identifier == _handRayInteractorLeft.Identifier)
+        {
+            pointerP = Services.Get<UiManagerService>().LeftPointerPos;
+        }
+        else if (pe.Identifier == _handRayInteractorRight.Identifier)
+        {
+            pointerP = Services.Get<UiManagerService>().RightPointerPos;
+        }
+        else
+        {
+            Debug.LogError($"Couldn't match pointerevent identifier {pe.Identifier}");
+            pointerP = Services.Get<UiManagerService>().RightPointerPos;
+        }
+        Services.Get<UiManagerService>().ShowContextMenu(
+            ob,
+            pointerP + (Camera.main.transform.forward * 0.1f)
+        );
     }
 
     private void Update()

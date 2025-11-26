@@ -2,7 +2,7 @@ using Oculus.Interaction;
 using UnityEngine;
 using static RadialButtonData;
 
-public delegate void RadialButtonEventHandler(object sender, RmSelection id);
+public delegate void RadialButtonEventHandler(object sender, RmSelection id, GameObject contextObj);
 public class RadialMenu : MonoBehaviour
 {
     [SerializeField]
@@ -11,8 +11,8 @@ public class RadialMenu : MonoBehaviour
     private Transform _buttonsParent;
     [SerializeField]
     private InteractableUnityEventWrapper _closeButton;
-
     private RadialButtonData.RmSelection _currentSelection;
+    private GameObject _contextObj; // only for context menu
 
     public event RadialButtonEventHandler SelectionEvent;
 
@@ -31,8 +31,9 @@ public class RadialMenu : MonoBehaviour
     {
     }
 
-    public void Populate(RadialMenuDefinition def)
+    public void Populate(RadialMenuDefinition def, GameObject contextObj)
     {
+        _contextObj = contextObj;
         int numBtns = def.buttons.Count;
 
         for (int i = 0; i < numBtns; i++)
@@ -41,7 +42,7 @@ public class RadialMenu : MonoBehaviour
             RadialMenuOption newb = Instantiate(_buttonPrefab, _buttonsParent).GetComponent<RadialMenuOption>();
             newb.Populate(def.buttons[i], angle);
             newb.Button.WhenUnselect.AddListener(() => { 
-                SelectionEvent.Invoke(this, newb.Id);
+                SelectionEvent.Invoke(this, newb.Id, _contextObj);
                 Destroy(gameObject);
             });
         }
