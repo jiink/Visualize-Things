@@ -28,6 +28,6 @@ Material:
     - _Angle: 32.3
     - _SceneMeshZWrite: 0
     m_Colors:
-    - _Color: {r: 0.23584908, g: 0.23584908, b: 0.23584908, a: 1}
+    - _Color: {r: 0.24528301, g: 0.24528301, b: 0.24528301, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

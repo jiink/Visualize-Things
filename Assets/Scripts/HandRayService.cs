@@ -129,7 +129,7 @@ public class HandRayService : MonoBehaviour
         Services.Get<UiManagerService>().ShowContextMenu(
             currentHoveredObject,
             pointerP + (Camera.main.transform.forward * 0.1f),
-            () => { SelectionRayEnabled = true; Debug.Log("DING DING DING"); }
+            () => { SelectionRayEnabled = true; }
         );
     }
 
