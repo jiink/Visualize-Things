@@ -160,7 +160,7 @@ MonoBehaviour:
   - WallU: 5
     WallV: 2
     AnchorUV: 1
-  Labels: 49151
+  Labels: 16383
 --- !u!114 &86254654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -589,10 +589,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd77dd659d8af60468d67682f18f27a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  _environmentDepthManager: {fileID: 500265439}
   _leftHandRenderer: {fileID: 1574080306}
   _rightHandRenderer: {fileID: 428875829}
   _handPassthroughMaterial: {fileID: 2100000, guid: d5e2ab92e53f69e40a760f658d55cb3d, type: 2}
   _handStandardMaterial: {fileID: 2100000, guid: d641a50c4fe4ee3489a64cf52b76ae79, type: 2}
+  _effectMesh: {fileID: 86254653}
+  _roomPassthroughMaterial: {fileID: 2100000, guid: c741f9ed577772048b24935e09055a80, type: 2}
+  _roomVisbileMaterial: {fileID: 2100000, guid: bd85c2b96e1ab7d409ce63202fd73c19, type: 2}
 --- !u!1 &417442056
 GameObject:
   m_ObjectHideFlags: 0
