@@ -6,8 +6,8 @@ public class HandRayService : MonoBehaviour
 {
     [SerializeField] private RayInteractor _handRayInteractorLeft;
     [SerializeField] private RayInteractor _handRayInteractorRight;
-    [SerializeField] private RayInteractor _progressIndicatorPrefab;
-    private readonly float _requiredPinchTimeS = 1.0f;
+    [SerializeField] private GameObject _progressIndicatorPrefab;
+    private readonly float _requiredPinchTimeS = 0.3f;
     private GameObject _hoveredObject = null;
     private bool _isHoldingPinch = false;
     private OVRHand.Hand _pinchHoldingHand = OVRHand.Hand.HandLeft;
@@ -44,24 +44,33 @@ public class HandRayService : MonoBehaviour
         Debug.Log("object hovered");
     }
 
+    private OVRHand.Hand idToHand(int identifier)
+    {
+        if (identifier == _handRayInteractorLeft.Identifier)
+        {
+            return OVRHand.Hand.HandLeft;
+        }
+        else if (identifier == _handRayInteractorRight.Identifier)
+        {
+            return OVRHand.Hand.HandRight;
+        }
+        else
+        {
+            Debug.LogError($"Couldn't match identifier {identifier}");
+            return OVRHand.Hand.None;
+        }
+    }
+
     // when your pinch stops
     private void OnModelUnselected(GameObject ob, PointerEvent pe)
     {
         Debug.Log("<color=blue>object unselected</color>");
-        if (pe.Identifier == _handRayInteractorLeft.Identifier)
+        if (_radialProgressIndicator != null)
         {
-            _pinchHoldingHand = OVRHand.Hand.HandLeft;
+            Destroy(_radialProgressIndicator.gameObject);
+            _radialProgressIndicator = null;
         }
-        else if (pe.Identifier == _handRayInteractorRight.Identifier)
-        {
-            _pinchHoldingHand = OVRHand.Hand.HandRight;
-        }
-        else
-        {
-            Debug.LogError($"Couldn't match pointerevent identifier {pe.Identifier}");
-            _pinchHoldingHand = OVRHand.Hand.None;
-        }
-        Destroy(_radialProgressIndicator.gameObject);
+        _isHoldingPinch = false;
     }
 
     // when your pinch starts
@@ -69,6 +78,18 @@ public class HandRayService : MonoBehaviour
     {
         Debug.Log("<color=green>object selected!</color>");
         _holdStartTime = Time.time;
+        _pinchHoldingHand = idToHand(pe.Identifier);
+        Quaternion rot = _pinchHoldingHand == OVRHand.Hand.HandLeft ?
+            Services.Get<UiManagerService>().LeftPointerRot :
+            Services.Get<UiManagerService>().RightPointerRot;
+        Vector3 pos = _pinchHoldingHand == OVRHand.Hand.HandLeft ?
+            Services.Get<UiManagerService>().LeftPointerPos :
+            Services.Get<UiManagerService>().RightPointerPos;
+        pos += rot * Vector3.forward * 0.1f;
+        _radialProgressIndicator = Instantiate(_progressIndicatorPrefab, pos, rot)
+            .GetComponent<RadialProgressIndicator>();
+        _isHoldingPinch = true;
+        _hoveredObject = ob;
     }
 
     private void ShowContextMenu(GameObject currentHoveredObject, OVRHand.Hand pinchHoldingHand)
@@ -100,7 +121,10 @@ public class HandRayService : MonoBehaviour
                 ShowContextMenu(_hoveredObject, _pinchHoldingHand);
                 _isHoldingPinch = false;
                 _hoveredObject = null;
-                Destroy(_radialProgressIndicator.gameObject);
+                if (_radialProgressIndicator?.gameObject != null)
+                {
+                    Destroy(_radialProgressIndicator.gameObject);
+                }
             }
         }
     }
