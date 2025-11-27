@@ -17,6 +17,7 @@ public class ColliderVisualizer : MonoBehaviour
     public State MState {
         get => _state;
         set {
+            if (_state == value) { return; }
             _state = value;
             switch (_state)
             {
@@ -48,19 +49,31 @@ public class ColliderVisualizer : MonoBehaviour
 
     internal void OnHover()
     {
-        Debug.Log("hoverrrr");
-        switch (MState)
+    }
+
+    public void TransitionTo(State state)
+    {
+        switch (state)
         {
-            case State.Proximity:
-                MState = State.Hover;
-                break;
             case State.Hover:
-                break;
-            case State.Selected:
+                switch (MState) 
+                {
+                    case State.Proximity:
+                        MState = State.Hover;
+                        break;
+                    case State.Hover:
+                        break;
+                    case State.Selected:
+                        break;
+                    default:
+                        Debug.LogError($"bad state {_state}");
+                        break;
+                }
                 break;
             default:
                 Debug.LogError($"bad state {_state}");
                 break;
+
         }
     }
 
@@ -83,23 +96,15 @@ public class ColliderVisualizer : MonoBehaviour
 
     internal void OnSelect()
     {
-        switch (MState)
-        {
-            case State.Proximity:
-                MState = State.Selected;
-                break;
-            case State.Hover:
-                MState = State.Selected;
-                break;
-            case State.Selected:
-                break;
-            default:
-                Debug.LogError($"bad state {_state}");
-                break;
-        }
+        
     }
 
     internal void OnUnselect()
+    {        
+    
+    }
+
+    public void OnCtxMenuOpened()
     {
         switch (MState)
         {
@@ -109,6 +114,24 @@ public class ColliderVisualizer : MonoBehaviour
                 break;
             case State.Selected:
                 MState = State.Proximity;
+                break;
+            default:
+                Debug.LogError($"bad state {_state}");
+                break;
+        }
+    }
+
+    public void OnCtxMenuClosed()
+    {
+        switch (MState)
+        {
+            case State.Proximity:
+                MState = State.Selected;
+                break;
+            case State.Hover:
+                MState = State.Selected;
+                break;
+            case State.Selected:
                 break;
             default:
                 Debug.LogError($"bad state {_state}");

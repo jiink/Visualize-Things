@@ -7,6 +7,7 @@ public class SelectableModel : MonoBehaviour
 
     private Quaternion lockedRotation; // write down rotation once lock happens
     private bool isRotationLocked = false;
+    private ColliderVisualizer _visualizerChildCache;
     public string modelFileSourcePath;
 
     void FixedUpdate()
@@ -27,7 +28,7 @@ public class SelectableModel : MonoBehaviour
     {
         if (GetVisualizerChild() != null)
         {
-            GetVisualizerChild().SetActive(true);
+            GetVisualizerChild().gameObject.SetActive(true);
         }
     }
 
@@ -35,20 +36,36 @@ public class SelectableModel : MonoBehaviour
     {
         if (GetVisualizerChild() != null)
         {
-            GetVisualizerChild().SetActive(false);
+            GetVisualizerChild().gameObject.SetActive(false);
         }
     }
 
-    public GameObject GetVisualizerChild()
+    public ColliderVisualizer GetVisualizerChild()
     {
-        foreach (Transform child in transform)
+        if (_visualizerChildCache == null)
         {
-            if (child.CompareTag("SelectionVisualizer"))
+            bool found = false;
+            foreach (Transform child in transform)
             {
-                return child.gameObject;
+                if (child.CompareTag("SelectionVisualizer"))
+                {
+                    if (child.gameObject.TryGetComponent<ColliderVisualizer>(out var visCmp))
+                    {
+                        _visualizerChildCache = visCmp;
+                    } else
+                    {
+                        Debug.LogError("Couldnt find collider vis component");
+                    }
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                Debug.LogError("Couldn't find selectionvisualizer child");
             }
         }
-        return null;
+        return _visualizerChildCache;
     }
 
     internal void LockRotation(bool rotationLock)

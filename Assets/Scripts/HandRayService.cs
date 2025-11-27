@@ -157,6 +157,19 @@ public class HandRayService : MonoBehaviour
                 );
             laser.transform.position = ptrPos;
             laser.transform.rotation = ptrRot;
+            if (hitInfo.collider.gameObject.TryGetComponent<SelectableModel>(out var smCmp))
+            {
+                if (smCmp.GetVisualizerChild() != null)
+                {
+                    smCmp.GetVisualizerChild().TransitionTo(ColliderVisualizer.State.Hover);
+                } else
+                {
+                    Debug.LogError("updatelaser couldnt get vis child");
+                }
+            } else
+            {
+                Debug.LogError("updatelaser couldnt get selectablemodel");
+            }
         }
         else
         {

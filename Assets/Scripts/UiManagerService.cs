@@ -108,6 +108,25 @@ public class UiManagerService : MonoBehaviour
         rm.Populate(def, contextObj);
         rm.SelectionEvent += OnRadialMenuSelection;
         rm.DestructionEvent += (_, _) => { onDestruction?.Invoke(); };
+        if (!contextObj.TryGetComponent<SelectableModel>(out var selectableModel))
+        {
+            Debug.LogError("Has context object, but no selectablemodel component");
+            return;
+        }
+        ColliderVisualizer visCh = selectableModel.GetVisualizerChild();
+        if (visCh != null)
+        {
+            visCh.MState = ColliderVisualizer.State.Selected;
+            rm.DestructionEvent += (_, _) => {
+                if (visCh != null) {
+                    visCh.MState = ColliderVisualizer.State.Proximity;
+                }
+            };
+        }
+        else
+        {
+            Debug.LogError("Has selectablemodel component, but no visualizer child");
+        }
     }
 
     private void HideRadialMenu()
