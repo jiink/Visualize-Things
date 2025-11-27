@@ -17,6 +17,22 @@ public class HandRayService : MonoBehaviour
     private OVRHand.Hand _pinchHoldingHand = OVRHand.Hand.HandLeft;
     private float _holdStartTime = 0.0f;
     private RadialProgressIndicator _radialProgressIndicator;
+    private bool _selectionRayEnabled = true;
+
+    public bool SelectionRayEnabled {
+        get => _selectionRayEnabled;
+        set
+        {
+            if (value == _selectionRayEnabled) { return; }
+            _selectionRayEnabled = value;
+            if (!_selectionRayEnabled)
+            {
+                _laserLineL.SetActive(false);
+                _laserLineR.SetActive(false);
+            }
+        }
+    }
+
     private void Start()
     {
         Services.Get<ModelLoadingService>().ModelSpawnedEvent += OnNewModelSpawned;
@@ -43,15 +59,15 @@ public class HandRayService : MonoBehaviour
     // could happen twice in a row
     private void OnModelUnhovered(GameObject ob, PointerEvent pe)
     {
-        Debug.Log($"object unhovered.");
+        //Debug.Log($"object unhovered.");
     }
 
     private void OnModelHovered(GameObject ob, PointerEvent pe)
     {
-        Debug.Log("object hovered");
+        //Debug.Log("object hovered");
     }
 
-    private OVRHand.Hand idToHand(int identifier)
+    private OVRHand.Hand IdToHand(int identifier)
     {
         if (identifier == _handRayInteractorLeft.Identifier)
         {
@@ -71,6 +87,7 @@ public class HandRayService : MonoBehaviour
     // when your pinch stops
     private void OnModelUnselected(GameObject ob, PointerEvent pe)
     {
+        if (!SelectionRayEnabled) { return; }
         Debug.Log("<color=blue>object unselected</color>");
         if (_radialProgressIndicator != null)
         {
@@ -83,9 +100,10 @@ public class HandRayService : MonoBehaviour
     // when your pinch starts
     private void OnModelSelected(GameObject ob, PointerEvent pe)
     {
+        if (!SelectionRayEnabled) { return; }
         Debug.Log("<color=green>object selected!</color>");
         _holdStartTime = Time.time;
-        _pinchHoldingHand = idToHand(pe.Identifier);
+        _pinchHoldingHand = IdToHand(pe.Identifier);
         Quaternion rot = _pinchHoldingHand == OVRHand.Hand.HandLeft ?
             Services.Get<UiManagerService>().LeftPointerRot :
             Services.Get<UiManagerService>().RightPointerRot;
@@ -107,9 +125,11 @@ public class HandRayService : MonoBehaviour
             OVRHand.Hand.HandRight => Services.Get<UiManagerService>().RightPointerPos,
             _ => throw new Exception("No hand?")
         };
+        SelectionRayEnabled = false;
         Services.Get<UiManagerService>().ShowContextMenu(
             currentHoveredObject,
-            pointerP + (Camera.main.transform.forward * 0.1f)
+            pointerP + (Camera.main.transform.forward * 0.1f),
+            () => { SelectionRayEnabled = true; Debug.Log("DING DING DING"); }
         );
     }
 
@@ -146,26 +166,29 @@ public class HandRayService : MonoBehaviour
 
     private void Update()
     {
-        if (_isHoldingPinch)
+        if (SelectionRayEnabled)
         {
-            float elapsedTime = Time.time - _holdStartTime;
-            float progress = elapsedTime / _requiredPinchTimeS;
-            if (_radialProgressIndicator != null)
+            UpdateLaser(false);
+            UpdateLaser(true);
+            if (_isHoldingPinch)
             {
-                _radialProgressIndicator.Progress = progress;
-            }
-            if (elapsedTime >= _requiredPinchTimeS)
-            {
-                ShowContextMenu(_hoveredObject, _pinchHoldingHand);
-                _isHoldingPinch = false;
-                _hoveredObject = null;
-                if (_radialProgressIndicator?.gameObject != null)
+                float elapsedTime = Time.time - _holdStartTime;
+                float progress = elapsedTime / _requiredPinchTimeS;
+                if (_radialProgressIndicator != null)
                 {
-                    Destroy(_radialProgressIndicator.gameObject);
+                    _radialProgressIndicator.Progress = progress;
+                }
+                if (elapsedTime >= _requiredPinchTimeS)
+                {
+                    ShowContextMenu(_hoveredObject, _pinchHoldingHand);
+                    _isHoldingPinch = false;
+                    _hoveredObject = null;
+                    if (_radialProgressIndicator != null ? _radialProgressIndicator.gameObject : null != null)
+                    {
+                        Destroy(_radialProgressIndicator.gameObject);
+                    }
                 }
             }
         }
-        UpdateLaser(false);
-        UpdateLaser(true);
     }
 }

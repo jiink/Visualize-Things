@@ -1,4 +1,5 @@
 using Oculus.Interaction;
+using System;
 using UnityEngine;
 using static RadialButtonData;
 
@@ -15,6 +16,12 @@ public class RadialMenu : MonoBehaviour
     private GameObject _contextObj; // only for context menu
 
     public event RadialButtonEventHandler SelectionEvent;
+    public event EventHandler DestructionEvent;
+
+    private void OnDestroy()
+    {
+        DestructionEvent?.Invoke(this, EventArgs.Empty);
+    }
 
 
     void Start()

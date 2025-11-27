@@ -65,9 +65,9 @@ public class UiManagerService : MonoBehaviour
         prompt.Populate(ip, hostname);
     }
 
-    internal void ShowContextMenu(GameObject ob, Vector3 pos)
+    internal void ShowContextMenu(GameObject ob, Vector3 pos, Action onDestruction)
     {
-        ShowRadialMenu(RadialMenuKind.Context, pos, ob);
+        ShowRadialMenu(RadialMenuKind.Context, pos, ob, onDestruction);
     }
 
     private void OnPinch(object sender, OVRPlugin.Hand hand, OVRHand.HandFinger finger, bool state, Vector3 pointerPose)
@@ -76,11 +76,11 @@ public class UiManagerService : MonoBehaviour
         {
             //Debug.Log($"PINCH BEGIN!! {hand} {finger}");
             Vector3 slidBackPose = pointerPose + (Camera.main.transform.forward * 0.1f);
-            ShowRadialMenu(RadialMenuKind.Primary, slidBackPose, null);
+            ShowRadialMenu(RadialMenuKind.Primary, slidBackPose, null, null);
         }
     }
 
-    private void ShowRadialMenu(RadialMenuKind kind, Vector3 pos, GameObject contextObj)
+    private void ShowRadialMenu(RadialMenuKind kind, Vector3 pos, GameObject contextObj, Action onDestruction)
     {
         if (contextObj == null && kind == RadialMenuKind.Context)
         {
@@ -107,6 +107,7 @@ public class UiManagerService : MonoBehaviour
         };
         rm.Populate(def, contextObj);
         rm.SelectionEvent += OnRadialMenuSelection;
+        rm.DestructionEvent += (_, _) => { onDestruction?.Invoke(); };
     }
 
     private void HideRadialMenu()
