@@ -7,6 +7,10 @@ public class HandRayService : MonoBehaviour
     [SerializeField] private RayInteractor _handRayInteractorLeft;
     [SerializeField] private RayInteractor _handRayInteractorRight;
     [SerializeField] private GameObject _progressIndicatorPrefab;
+    [SerializeField] private GameObject _laserLinePrefab;
+    private GameObject _laserLineL;
+    private GameObject _laserLineR;
+    private LayerMask _laserLineLayer;
     private readonly float _requiredPinchTimeS = 0.3f;
     private GameObject _hoveredObject = null;
     private bool _isHoldingPinch = false;
@@ -16,6 +20,9 @@ public class HandRayService : MonoBehaviour
     private void Start()
     {
         Services.Get<ModelLoadingService>().ModelSpawnedEvent += OnNewModelSpawned;
+        _laserLineL = Instantiate(_laserLinePrefab);
+        _laserLineR = Instantiate(_laserLinePrefab);
+        _laserLineLayer = LayerMask.GetMask("Models");
     }
 
     private void OnNewModelSpawned(object sender, ModelSpawnedEventArgs e)
@@ -106,6 +113,37 @@ public class HandRayService : MonoBehaviour
         );
     }
 
+    private void UpdateLaser(bool left)
+    {
+        Vector3 ptrPos = left ? 
+            Services.Get<UiManagerService>().LeftPointerPos :
+            Services.Get<UiManagerService>().RightPointerPos;
+        Quaternion ptrRot = left ? 
+            Services.Get<UiManagerService>().LeftPointerRot :
+            Services.Get<UiManagerService>().RightPointerRot;
+        GameObject laser = left ? _laserLineL : _laserLineR;
+        if (Physics.Raycast(
+            ptrPos,
+            ptrRot * Vector3.forward,
+            out RaycastHit hitInfo,
+            10.0f,
+            _laserLineLayer))
+        {
+            laser.SetActive(true);
+            laser.transform.localScale = new Vector3(
+                laser.transform.localScale.x,
+                laser.transform.localScale.y,
+                hitInfo.distance
+                );
+            laser.transform.position = ptrPos;
+            laser.transform.rotation = ptrRot;
+        }
+        else
+        {
+            laser.SetActive(false);
+        }
+    }
+
     private void Update()
     {
         if (_isHoldingPinch)
@@ -127,5 +165,7 @@ public class HandRayService : MonoBehaviour
                 }
             }
         }
+        UpdateLaser(false);
+        UpdateLaser(true);
     }
 }
