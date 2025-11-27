@@ -1,4 +1,5 @@
-﻿using Oculus.Interaction.Surfaces;
+﻿using Oculus.Interaction;
+using Oculus.Interaction.Surfaces;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -114,8 +115,7 @@ public class ModelLoadingService : MonoBehaviour
         colliderSurface.InjectCollider(boxCollider);
 
         // Have Core listen to wselection events
-        //SelectableModel selectableModel = template.GetComponent<SelectableModel>();
-        //selectableModel.Selected += StrodeloCore.Instance.OnModelSelected;
+        SelectableModel selectableModel = template.GetComponent<SelectableModel>();
         //selectableModel.modelFileSourcePath = filePath; // just so it can be saved later
 
         //template.transform.position = UnityEngine.Camera.main.transform.position +
@@ -127,8 +127,20 @@ public class ModelLoadingService : MonoBehaviour
         colliderVisualizer.transform.SetParent(template.transform);
         colliderVisualizer.transform.localPosition = boxCollider.center;
         colliderVisualizer.transform.localScale = boxCollider.size;
-        //colliderVisualizer.SetActive(false);
-
+        if (!template.TryGetComponent<PointableUnityEventWrapper>(out var evWrap))
+        {
+            Debug.LogError("no event wrapper on new model");
+            return null;
+        }
+        if (!colliderVisualizer.TryGetComponent<ColliderVisualizer>(out var cvcmp))
+        {
+            Debug.LogError("no collider visualizer component in new model");
+            return null;
+        }
+        evWrap.WhenHover.AddListener((_) => { cvcmp.OnHover(); });
+        evWrap.WhenUnhover.AddListener((_) => { cvcmp.OnUnhover(); });
+        evWrap.WhenSelect.AddListener((_) => { cvcmp.OnSelect(); });
+        evWrap.WhenUnselect.AddListener((_) => { cvcmp.OnUnselect(); });
         return template;
     }
 
