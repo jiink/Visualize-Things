@@ -108,24 +108,27 @@ public class UiManagerService : MonoBehaviour
         rm.Populate(def, contextObj);
         rm.SelectionEvent += OnRadialMenuSelection;
         rm.DestructionEvent += (_, _) => { onDestruction?.Invoke(); };
-        if (!contextObj.TryGetComponent<SelectableModel>(out var selectableModel))
+        if (contextObj != null)
         {
-            Debug.LogError("Has context object, but no selectablemodel component");
-            return;
-        }
-        ColliderVisualizer visCh = selectableModel.GetVisualizerChild();
-        if (visCh != null)
-        {
-            visCh.MState = ColliderVisualizer.State.Selected;
-            rm.DestructionEvent += (_, _) => {
-                if (visCh != null) {
-                    visCh.MState = ColliderVisualizer.State.Proximity;
-                }
-            };
-        }
-        else
-        {
-            Debug.LogError("Has selectablemodel component, but no visualizer child");
+            if (!contextObj.TryGetComponent<SelectableModel>(out var selectableModel))
+            {
+                Debug.LogError("Has context object, but no selectablemodel component");
+                return;
+            }
+            ColliderVisualizer visCh = selectableModel.GetVisualizerChild();
+            if (visCh != null)
+            {
+                visCh.MState = ColliderVisualizer.State.Selected;
+                rm.DestructionEvent += (_, _) => {
+                    if (visCh != null) {
+                        visCh.MState = ColliderVisualizer.State.Proximity;
+                    }
+                };
+            }
+            else
+            {
+                Debug.LogError("Has selectablemodel component, but no visualizer child");
+            }
         }
     }
 
@@ -149,6 +152,10 @@ public class UiManagerService : MonoBehaviour
             case RadialButtonData.RmSelection.DeleteModel:
                 Destroy(contextObj);
                 Debug.Log("destroyed model");
+                break;
+            case RadialButtonData.RmSelection.ChangeOcclusion:
+                Debug.Log("TOGGLING2324324!");
+                Services.Get<OcclusionService>().ToggleOcclusion();
                 break;
             default:
                 Debug.Log($"Unimplemented selection {id}");
