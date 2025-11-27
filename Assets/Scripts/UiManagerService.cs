@@ -154,8 +154,10 @@ public class UiManagerService : MonoBehaviour
                 Debug.Log("destroyed model");
                 break;
             case RadialButtonData.RmSelection.ChangeOcclusion:
-                Debug.Log("TOGGLING2324324!");
                 Services.Get<OcclusionService>().ToggleOcclusion();
+                break;
+            case RadialButtonData.RmSelection.PlaceOnSurface:
+                Services.Get<SurfacePlacementService>().Begin(contextObj);
                 break;
             default:
                 Debug.Log($"Unimplemented selection {id}");
@@ -163,4 +165,26 @@ public class UiManagerService : MonoBehaviour
         }
     }
 
+    internal void SetAllLoadedModelCollisions(bool v)
+    {
+        GameObject[] selectableObjects = GameObject.FindGameObjectsWithTag("SelectableObject");
+        foreach (GameObject obj in selectableObjects)
+        {
+            Collider collider = obj.GetComponent<Collider>();
+
+            // 4. Check if a Collider component exists before trying to access it.
+            if (collider != null)
+            {
+                // 5. Set the enabled state of the collider.
+                collider.enabled = v;
+                // Optional: Log the action for debugging
+                // Debug.Log($"Collider on {obj.name} set to enabled: {v}");
+            }
+            else
+            {
+                // Optional: Log if a tagged object is missing a collider
+                Debug.LogWarning($"GameObject '{obj.name}' with tag is missing a Collider component.");
+            }
+        }
+    }
 }

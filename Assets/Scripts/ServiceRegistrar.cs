@@ -10,6 +10,8 @@ public class ServiceRegistrar : MonoBehaviour
         RegisterService<QrService>();
         RegisterService<ProximityMaterialService>();
         RegisterService<OcclusionService>();
+        RegisterService<SurfacePlacementService>();
+        RegisterService<HandRayService>();
     }
 
     private void RegisterService<T>() where T : class

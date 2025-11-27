@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: RoomPassthrough
-  m_Shader: {fileID: 4800000, guid: f7a957024f8cfba47b11d3c17287900b, type: 3}
+  m_Shader: {fileID: 4800000, guid: 467bb1d52b84786459dbd9be4a413086, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -66,14 +66,18 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _EnvironmentDepthBias: 0.06
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _HighLightAttenuation: 0.8
+    - _HighlightOpacity: 0.2
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SceneMeshZWrite: 0
+    - _ShadowIntensity: 0.8
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1

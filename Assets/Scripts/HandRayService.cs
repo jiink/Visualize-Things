@@ -18,7 +18,14 @@ public class HandRayService : MonoBehaviour
     private float _holdStartTime = 0.0f;
     private RadialProgressIndicator _radialProgressIndicator;
     private bool _selectionRayEnabled = true;
-
+    public LayerMask LaserLineLayer
+    {
+        get => _laserLineLayer;
+        set
+        {
+            _laserLineLayer = value;
+        }
+    }
     public bool SelectionRayEnabled {
         get => _selectionRayEnabled;
         set
@@ -168,7 +175,7 @@ public class HandRayService : MonoBehaviour
                 }
             } else
             {
-                Debug.LogError("updatelaser couldnt get selectablemodel");
+                
             }
         }
         else

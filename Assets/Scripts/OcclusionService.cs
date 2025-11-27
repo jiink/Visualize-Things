@@ -19,7 +19,6 @@ public class OcclusionService : MonoBehaviour
     }
     public void SetOcclusion(bool state)
     {
-        Debug.Log("TOGGLING!");
         _occlusionEnabled = state;
         Material handMat = _occlusionEnabled ? 
             _handPassthroughMaterial : _handStandardMaterial;

@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpawnOnStart: 1
-  MeshMaterial: {fileID: 2100000, guid: bd85c2b96e1ab7d409ce63202fd73c19, type: 2}
+  MeshMaterial: {fileID: 2100000, guid: c741f9ed577772048b24935e09055a80, type: 2}
   Colliders: 1
   CutHoles: 0
   castShadows: 0
@@ -451,6 +451,7 @@ GameObject:
   - component: {fileID: 360901445}
   - component: {fileID: 360901446}
   - component: {fileID: 360901447}
+  - component: {fileID: 360901448}
   m_Layer: 0
   m_Name: '[Services]'
   m_TagString: Untagged
@@ -597,6 +598,19 @@ MonoBehaviour:
   _effectMesh: {fileID: 86254653}
   _roomPassthroughMaterial: {fileID: 2100000, guid: c741f9ed577772048b24935e09055a80, type: 2}
   _roomVisbileMaterial: {fileID: 2100000, guid: bd85c2b96e1ab7d409ce63202fd73c19, type: 2}
+--- !u!114 &360901448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360901438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb8925588e4809a4bb706a11ba2e37aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SurfacePlacementService
+  _effectMesh: {fileID: 86254653}
 --- !u!1 &417442056
 GameObject:
   m_ObjectHideFlags: 0
