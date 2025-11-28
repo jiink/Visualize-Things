@@ -1,9 +1,16 @@
 using Meta.XR.MRUtilityKit;
+using Oculus.Interaction.Surfaces;
+using Oculus.Interaction;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class SurfacePlacementService : MonoBehaviour
 {
     [SerializeField] private EffectMesh _effectMesh;
+    private bool _mrukRoomLayersAlreadySetUp = false;
+    private bool _mrukRoomInteractablesAlreadySetUp = false;
+    private bool _roomClickListeningEnabled = false;
 
     void OnValidate()
     {
@@ -21,64 +28,79 @@ public class SurfacePlacementService : MonoBehaviour
             return;
         }
         SetMrukRoomLayers();
-        // make the GO transparent to your pointer
-        //if (go.TryGetComponent<Collider>(out var goCollider))
-        //{
-        //    goCollider.enabled = false;
-        //}
-        //else
-        //{
-        //    Debug.LogError("model for surface placement has no collider");
-        //}
-        // actually, make all loaded models transparent to your pointer.
+        SetupMrukRoomInteractables();
+        // make all loaded models transparent to your pointer.
         Services.Get<UiManagerService>().SetAllLoadedModelCollisions(false);
         Services.Get<HandRayService>().LaserLineLayer = LayerMask.GetMask("EffectMesh");
-        // start listening to selection events of the effect mesh... too hard... instead just wait for a pinch from either hand?
-        
+        // start listening to selection events of the effect mesh...
+        _roomClickListeningEnabled = true;
     }
 
 
-    
+
     void SetMrukRoomLayers()
     {
+        if (_mrukRoomLayersAlreadySetUp) { return; }
         const string TargetLayerName = "EffectMesh";
-        // 1. Get the integer ID for the target layer name.
         int targetLayer = LayerMask.NameToLayer(TargetLayerName);
         if (targetLayer == -1)
         {
-            Debug.LogError($"Layer '{TargetLayerName}' not found in the project's Tag and Layers settings. Please create it.");
+            Debug.LogError($"Layer '{TargetLayerName}' not found in the project's Tag and Layers settings");
             return;
         }
         MRUKRoom[] roomComponents = FindObjectsByType<MRUKRoom>(FindObjectsSortMode.None);
 
         Debug.Log($"Found {roomComponents.Length} objects with the MRUKRoom component.");
-
-        // 3. Iterate through each object and recursively set the layer.
         foreach (MRUKRoom room in roomComponents)
         {
             GameObject rootObject = room.gameObject;
             SetLayerRecursively(rootObject, targetLayer);
         }
-
         Debug.Log($"Successfully set the layer to '{TargetLayerName}' for all MRUKRoom objects and their children.");
+        _mrukRoomLayersAlreadySetUp = true;
     }
 
-    /// <summary>
-    /// Recursively sets the layer of the given GameObject and all its children.
-    /// </summary>
-    /// <param name="targetObject">The object to start from.</param>
-    /// <param name="layer">The integer ID of the target layer.</param>
+    void SetupMrukRoomInteractables()
+    {
+        if (_mrukRoomInteractablesAlreadySetUp) { return; }
+        // fill this in
+        MRUKAnchor[] anchors = FindObjectsByType<MRUKAnchor>(FindObjectsSortMode.None);
+        foreach (MRUKAnchor anchor in anchors)
+        {
+            if (anchor.transform.childCount > 0)
+            {
+                Transform firstChild = anchor.transform.GetChild(0);
+                GameObject childGo = firstChild.gameObject;
+
+                BoxCollider existingBoxCollider = childGo.GetComponent<BoxCollider>();
+
+                if (existingBoxCollider != null)
+                {
+                    ColliderSurface colliderSurface = childGo.AddComponent<ColliderSurface>();
+                    colliderSurface.InjectCollider(existingBoxCollider);
+                    RayInteractable rayInteractable = childGo.AddComponent<RayInteractable>();
+                    rayInteractable.InjectSurface(colliderSurface);
+                    rayInteractable.WhenPointerEventRaised += (PointerEvent evt) =>
+                    {
+                        if (!_roomClickListeningEnabled) { return; }
+                        if (evt.Type == PointerEventType.Select)
+                        {
+                            Debug.Log($"MRUK Interactable Selected: {childGo.name}");
+                        }
+                    };
+                }
+            }
+        }
+        _mrukRoomInteractablesAlreadySetUp = true;
+    }
+
     private void SetLayerRecursively(GameObject targetObject, int layer)
     {
         if (targetObject == null)
         {
             return;
         }
-
-        // Set the layer for the current object.
         targetObject.layer = layer;
-
-        // Iterate through all children and call the function recursively.
         foreach (Transform child in targetObject.transform)
         {
             SetLayerRecursively(child.gameObject, layer);
