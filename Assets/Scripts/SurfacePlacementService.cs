@@ -4,6 +4,7 @@ using Oculus.Interaction;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using System;
 
 public class SurfacePlacementService : MonoBehaviour
 {
@@ -163,12 +164,21 @@ public class SurfacePlacementService : MonoBehaviour
                         if (evt.Type == PointerEventType.Select)
                         {
                             Debug.Log($"MRUK Interactable Selected: {childGo.name}");
+                            End();
                         }
                     };
                 }
             }
         }
         _mrukRoomInteractablesAlreadySetUp = true;
+    }
+
+    private void End()
+    {
+        _placementActive = false;
+        _currentGo = null;
+        Services.Get<UiManagerService>().SetAllLoadedModelCollisions(true);
+        Services.Get<HandRayService>().LaserLineLayer = LayerMask.GetMask("Models");
     }
 
     private void SetLayerRecursively(GameObject targetObject, int layer)
