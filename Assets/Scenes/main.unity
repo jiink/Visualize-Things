@@ -474,12 +474,14 @@ MonoBehaviour:
   _fileBrowserPrefab: {fileID: 5471542551109582591, guid: 1be4366555de598488e74b58c8300e3b, type: 3}
   _pcConnectionPromptPrefab: {fileID: 3026460589919376060, guid: bc44ad9007493ab4c9b091a732905b9f, type: 3}
   _radialMenuPrefab: {fileID: 14148020393856914, guid: c55ce664bcfd32c4fb1d412a17e2a56b, type: 3}
+  _sunEditorPrefab: {fileID: 8828422064343113702, guid: 7fb04c909fe4a1a49a6e498baaff9847, type: 3}
   _ovrHandLeft: {fileID: 1521450726}
   _ovrHandRight: {fileID: 221755048}
   _ovrCamRig: {fileID: 1337003223}
   _pinchDetector: {fileID: 618658707}
   _primaryRadialMenuDef: {fileID: 11400000, guid: cbedb014a2dd1ab4d91e7f9913a162cc, type: 2}
   _contextRadialMenuDef: {fileID: 11400000, guid: 0593309efe18b374cb7131f80b18b54d, type: 2}
+  _directionalLight: {fileID: 563774489}
 --- !u!4 &360901440
 Transform:
   m_ObjectHideFlags: 0
@@ -565,6 +567,8 @@ MonoBehaviour:
   _handRayInteractorRight: {fileID: 130820674}
   _progressIndicatorPrefab: {fileID: 2102337675137820120, guid: 0061873512771984da4d3d0758c1f130, type: 3}
   _laserLinePrefab: {fileID: 991012293185485115, guid: f307df5b200cfe140b7728f62f5fe210, type: 3}
+  LaserHitPointL: {x: 0, y: 0, z: 0}
+  LaserHitPointR: {x: 0, y: 0, z: 0}
 --- !u!114 &360901446
 MonoBehaviour:
   m_ObjectHideFlags: 0

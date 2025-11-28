@@ -13,12 +13,14 @@ public class UiManagerService : MonoBehaviour
     [SerializeField] private GameObject _fileBrowserPrefab;
     [SerializeField] private GameObject _pcConnectionPromptPrefab;
     [SerializeField] private GameObject _radialMenuPrefab;
+    [SerializeField] private GameObject _sunEditorPrefab;
     [SerializeField] private OVRHand _ovrHandLeft;
     [SerializeField] private OVRHand _ovrHandRight;
     [SerializeField] private OVRCameraRig _ovrCamRig;
     [SerializeField] private PinchDetector _pinchDetector;
     [SerializeField] private RadialMenuDefinition _primaryRadialMenuDef;
     [SerializeField] private RadialMenuDefinition _contextRadialMenuDef;
+    [SerializeField] private Light _directionalLight;
     private GameObject _currentRadialMenu;
 
     // global pos
@@ -26,6 +28,15 @@ public class UiManagerService : MonoBehaviour
     public Vector3 RightPointerPos => _ovrCamRig.trackingSpace.TransformPoint(_ovrHandRight.PointerPose.position);
     public Quaternion LeftPointerRot => _ovrHandLeft.PointerPose.rotation;
     public Quaternion RightPointerRot => _ovrHandRight.PointerPose.rotation;
+
+    public Pose GetInFaceSpawnPose(bool flipped = false)
+    {
+        Transform head = Camera.main.transform;
+        Vector3 pos = head.position + head.forward * 0.35f;
+        Quaternion rot = Quaternion.LookRotation(
+            (flipped ? -1.0f : 1.0f) * head.forward);
+        return new Pose(pos, rot);
+    }
 
     void OnValidate()
     {
@@ -42,11 +53,8 @@ public class UiManagerService : MonoBehaviour
 
     public GameObject ShowFileBrowser(System.Action<string, Vector3> onFileSelectedCallback)
     {
-        GameObject fb = Instantiate(_fileBrowserPrefab);
-        Transform head = Camera.main.transform;
-        fb.transform.position = head.position + head.forward * 0.35f;
-        fb.transform.LookAt(head);
-        fb.transform.Rotate(0, 180, 0);
+        Pose p = GetInFaceSpawnPose(false);
+        GameObject fb = Instantiate(_fileBrowserPrefab, p.position, p.rotation);
         FileBrowser fbc = fb.GetComponent<FileBrowser>();
         fbc.FileOpen += (string path, Vector3 p) =>
         {
@@ -158,6 +166,11 @@ public class UiManagerService : MonoBehaviour
                 break;
             case RadialButtonData.RmSelection.PlaceOnSurface:
                 Services.Get<SurfacePlacementService>().Begin(contextObj);
+                break;
+            case RadialButtonData.RmSelection.EditLight:
+                Pose p = GetInFaceSpawnPose();
+                var s = Instantiate(_sunEditorPrefab, p.position, p.rotation).GetComponent<SunEditor>();
+                s.Populate(_directionalLight);
                 break;
             default:
                 Debug.Log($"Unimplemented selection {id}");

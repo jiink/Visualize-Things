@@ -20,7 +20,8 @@ public struct RadialButtonData
         Save,
         Load,
         ChangeOcclusion,
-        EditMaterials
+        EditMaterials,
+        EditLight
     }
     public RmSelection id;
     public Sprite icon;
