@@ -72,7 +72,7 @@ public class SurfacePlacementService : MonoBehaviour
                 Transform firstChild = anchor.transform.GetChild(0);
                 GameObject childGo = firstChild.gameObject;
 
-                BoxCollider existingBoxCollider = childGo.GetComponent<BoxCollider>();
+                Collider existingBoxCollider = childGo.GetComponent<Collider>();
 
                 if (existingBoxCollider != null)
                 {
