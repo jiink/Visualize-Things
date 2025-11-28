@@ -14,16 +14,18 @@ public class ProximityMaterialService : MonoBehaviour
     {
         Vector3 l = Services.Get<UiManagerService>().LeftPointerPos;
         Vector3 r = Services.Get<UiManagerService>().RightPointerPos;
+        Vector3 lsrL = Services.Get<HandRayService>().LaserHitPointL;
+        Vector3 lsrR = Services.Get<HandRayService>().LaserHitPointR;
         Vector4[] fadePoints = {
             new(l.x, l.y, l.z, 1.0f),
             new(r.x, r.y, r.z, 1.0f),
-            Vector4.zero,
-            Vector4.zero,
+            new(lsrL.x, lsrL.y, lsrL.z, Services.Get<HandRayService>().LaserHitPointLValid ? 1.0f : 0.0f),
+            new(lsrR.x, lsrR.y, lsrR.z, Services.Get<HandRayService>().LaserHitPointRValid ? 1.0f : 0.0f),
             Vector4.zero,
             Vector4.zero,
         };
         _mat.SetVectorArray("_WorldSpaceFadePoints", fadePoints);
-        _mat.SetInt("_UsedPointCount", 2);
+        _mat.SetInt("_UsedPointCount", 4);
         _mat.SetFloat("_OpacityMultiplier", 1.0f);
     }
 }

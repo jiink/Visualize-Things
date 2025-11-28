@@ -25,7 +25,7 @@ public class ColliderVisualizer : MonoBehaviour
                     _meshRenderer.sharedMaterial = _proxMat;
                     break;
                 case State.Hover:
-                    _meshRenderer.sharedMaterial = _hoverMat;
+                    //_meshRenderer.sharedMaterial = _hoverMat;
                     break;
                 case State.Selected:
                     _meshRenderer.sharedMaterial = _selectionMat;
@@ -44,7 +44,6 @@ public class ColliderVisualizer : MonoBehaviour
 
     void Update()
     {
-        
     }
 
     internal void OnHover()

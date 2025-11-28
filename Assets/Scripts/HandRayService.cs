@@ -39,6 +39,10 @@ public class HandRayService : MonoBehaviour
             }
         }
     }
+    public Vector3 LaserHitPointL;
+    public bool LaserHitPointLValid => _laserLineL.activeSelf;
+    public Vector3 LaserHitPointR;
+    public bool LaserHitPointRValid => _laserLineR.activeSelf;
 
     private void Start()
     {
@@ -156,6 +160,14 @@ public class HandRayService : MonoBehaviour
             10.0f,
             _laserLineLayer))
         {
+            if (left)
+            {
+                LaserHitPointL = hitInfo.point;
+            }
+            else
+            {
+                LaserHitPointR = hitInfo.point;
+            }
             laser.SetActive(true);
             laser.transform.localScale = new Vector3(
                 laser.transform.localScale.x,

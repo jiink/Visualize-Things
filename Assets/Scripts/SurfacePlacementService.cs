@@ -61,7 +61,7 @@ public class SurfacePlacementService : MonoBehaviour
                 out MRUKAnchor anchor,
                 out Vector3 sNormal
                 );
-            if (placementPose != null)
+            if (!placementPose.Equals(new Pose()))
             {
                 _currentGo.transform.SetPositionAndRotation(
                     placementPose.position, placementPose.rotation);
@@ -69,7 +69,8 @@ public class SurfacePlacementService : MonoBehaviour
             }
             else
             {
-                Debug.LogError("placementpose or anchor is null");
+                Debug.LogError("couldn't get placement pose");
+                End();
             }
         }
     }
