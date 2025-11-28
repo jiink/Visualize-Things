@@ -14,6 +14,7 @@ public class UiManagerService : MonoBehaviour
     [SerializeField] private GameObject _pcConnectionPromptPrefab;
     [SerializeField] private GameObject _radialMenuPrefab;
     [SerializeField] private GameObject _sunEditorPrefab;
+    [SerializeField] private GameObject _materialEditorPrefab;
     [SerializeField] private OVRHand _ovrHandLeft;
     [SerializeField] private OVRHand _ovrHandRight;
     [SerializeField] private OVRCameraRig _ovrCamRig;
@@ -140,6 +141,14 @@ public class UiManagerService : MonoBehaviour
         }
     }
 
+    public void ShowMaterialEditor(GameObject contextObj)
+    {
+        var p = GetInFaceSpawnPose();
+        var m = Instantiate(_materialEditorPrefab, p.position, p.rotation)
+            .GetComponent<MaterialEditorMenu>();
+        m.InspectedObject = contextObj;
+    }
+
     private void HideRadialMenu()
     {
         if (_currentRadialMenu != null)
@@ -158,6 +167,11 @@ public class UiManagerService : MonoBehaviour
                 );
                 break;
             case RadialButtonData.RmSelection.DeleteModel:
+                if (contextObj == null)
+                {
+                    Debug.LogError($"context object required for {id}");
+                    break;
+                }
                 Destroy(contextObj);
                 Debug.Log("destroyed model");
                 break;
@@ -165,12 +179,25 @@ public class UiManagerService : MonoBehaviour
                 Services.Get<OcclusionService>().ToggleOcclusion();
                 break;
             case RadialButtonData.RmSelection.PlaceOnSurface:
+                if (contextObj == null)
+                {
+                    Debug.LogError($"context object required for {id}");
+                    break;
+                }
                 Services.Get<SurfacePlacementService>().Begin(contextObj);
                 break;
             case RadialButtonData.RmSelection.EditLight:
                 Pose p = GetInFaceSpawnPose();
                 var s = Instantiate(_sunEditorPrefab, p.position, p.rotation).GetComponent<SunEditor>();
                 s.Populate(_directionalLight);
+                break;
+            case RadialButtonData.RmSelection.EditMaterials:
+                if (contextObj == null)
+                {
+                    Debug.LogError($"context object required for {id}");
+                    break;
+                }
+                ShowMaterialEditor(contextObj);
                 break;
             default:
                 Debug.Log($"Unimplemented selection {id}");

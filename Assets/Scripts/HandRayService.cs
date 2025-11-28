@@ -122,6 +122,14 @@ public class HandRayService : MonoBehaviour
             Services.Get<UiManagerService>().LeftPointerPos :
             Services.Get<UiManagerService>().RightPointerPos;
         pos += rot * Vector3.forward * 0.1f;
+        if (_radialProgressIndicator != null)
+        {
+            if (_radialProgressIndicator.gameObject != null)
+            {
+                Destroy(_radialProgressIndicator.gameObject);
+            }
+            _radialProgressIndicator = null;
+        }
         _radialProgressIndicator = Instantiate(_progressIndicatorPrefab, pos, rot)
             .GetComponent<RadialProgressIndicator>();
         _isHoldingPinch = true;
