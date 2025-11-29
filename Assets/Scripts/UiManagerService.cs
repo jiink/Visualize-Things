@@ -1,3 +1,4 @@
+using Meta.XR;
 using Oculus.Interaction;
 using System;
 using UnityEngine;
@@ -23,7 +24,9 @@ public class UiManagerService : MonoBehaviour
     [SerializeField] private RadialMenuDefinition _primaryRadialMenuDef;
     [SerializeField] private RadialMenuDefinition _contextRadialMenuDef;
     [SerializeField] private Light _directionalLight;
+    [SerializeField] private PassthroughCameraAccess _cameraAccess;
     private GameObject _currentRadialMenu;
+    private bool _panoScannerExists = false;
 
     // global pos
     public Vector3 LeftPointerPos => _ovrCamRig.trackingSpace.TransformPoint(_ovrHandLeft.PointerPose.position);
@@ -45,6 +48,10 @@ public class UiManagerService : MonoBehaviour
         if (_ovrCamRig == null)
         {
             _ovrCamRig = FindFirstObjectByType<OVRCameraRig>();
+        }
+        if (_cameraAccess == null)
+        {
+            _cameraAccess = FindFirstObjectByType<PassthroughCameraAccess>();
         }
     }
 
@@ -204,9 +211,18 @@ public class UiManagerService : MonoBehaviour
                 break;
             case RadialButtonData.RmSelection.SetReflections:
                 {
+                    if (_panoScannerExists)
+                    {
+                        Debug.LogError("A panorama scanner already exists");
+                        break;
+                    }
                     Pose p = GetInFaceSpawnPose();
                     var go = Instantiate(_panoScannerPrefab, p.position, p.rotation);
                     go.transform.SetParent(Camera.main.transform);
+                    var scanner = go.GetComponent<PanoScanner>();
+                    _panoScannerExists = true;
+                    scanner.FinishEvent += (_, _) => { _panoScannerExists = false; };
+                    scanner.Begin(_cameraAccess);
                     break;
                 }
             default:
