@@ -22,6 +22,7 @@ public class CaptureSphere : MonoBehaviour
         _cam.farClipPlane = 5.0f;
         _cam.clearFlags = CameraClearFlags.SolidColor;
         _cam.backgroundColor = Color.green;
+        _cam.cullingMask = LayerMask.GetMask("Photo");
         _camSetup = true;
     }
 
