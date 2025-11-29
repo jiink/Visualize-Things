@@ -199,6 +199,9 @@ public class UiManagerService : MonoBehaviour
                 }
                 ShowMaterialEditor(contextObj);
                 break;
+            case RadialButtonData.RmSelection.SetReflections:
+
+                break;
             default:
                 Debug.Log($"Unimplemented selection {id}");
                 break;
