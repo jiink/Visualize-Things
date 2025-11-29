@@ -76,15 +76,19 @@ public class PanoScanner : MonoBehaviour
             return;
         }
         var pt = Instantiate(_photoTemplate, _photoBall);
-        pt.transform.localPosition = Vector3.zero;
-        pt.transform.Translate(pt.transform.forward * 1.0f, Space.Self);
-        var rawImg = pt.GetComponentInChildren<RawImage>();
-        if (rawImg == null)
+        Vector3 directionFromCam = (_photoBall.position - Camera.main.transform.position).normalized;
+        Vector3 localDirection = _photoBall.InverseTransformDirection(directionFromCam);
+        pt.transform.localPosition = localDirection * 1.0f;
+        //pt.transform.LookAt(_photoBall);
+        pt.transform.forward = directionFromCam;
+
+        var renderer = pt.GetComponentInChildren<Renderer>();
+        if (renderer == null)
         {
-            Debug.LogError("couldn't find rawimage in photo template");
+            Debug.LogError("couldn't find Renderer in photo template");
             return;
         }
-        rawImg.texture = tex;
+        renderer.material.mainTexture = tex;
     }
 
     private IEnumerator DoPhotoLoop()
