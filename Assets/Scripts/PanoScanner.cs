@@ -79,8 +79,13 @@ public class PanoScanner : MonoBehaviour
         Vector3 directionFromCam = (_photoBall.position - Camera.main.transform.position).normalized;
         Vector3 localDirection = _photoBall.InverseTransformDirection(directionFromCam);
         pt.transform.localPosition = localDirection * 1.0f;
-        //pt.transform.LookAt(_photoBall);
         pt.transform.forward = directionFromCam;
+        float photoWidth = GetFrustumWidthAtDistance(_cameraAccess, 1.0f);
+        float photoScaleFactor = photoWidth / pt.transform.localScale.x;
+        pt.transform.localScale = new Vector3(
+            photoWidth, 
+            pt.transform.localScale.y * photoScaleFactor,
+            1.0f);
 
         var renderer = pt.GetComponentInChildren<Renderer>();
         if (renderer == null)
@@ -94,6 +99,7 @@ public class PanoScanner : MonoBehaviour
     private IEnumerator DoPhotoLoop()
     {
         const float period = 2.0f;
+        yield return new WaitForSeconds(period);
         while (true)
         {
             DoPhoto();
@@ -117,5 +123,14 @@ public class PanoScanner : MonoBehaviour
         snapshot.LoadRawTextureData(pixels);
         snapshot.Apply();
         return snapshot;
+    }
+
+    private static float GetFrustumWidthAtDistance(PassthroughCameraAccess camera, float distance)
+    {
+        Ray leftRay = camera.ViewportPointToRay(new Vector2(0f, 0.5f));
+        Ray rightRay = camera.ViewportPointToRay(new Vector2(1f, 0.5f));
+        float horizontalFovDegrees = Vector3.Angle(leftRay.direction, rightRay.direction);
+        float horizontalFovRadians = horizontalFovDegrees * Mathf.Deg2Rad;
+        return 2f * distance * Mathf.Tan(horizontalFovRadians / 2f);
     }
 }
