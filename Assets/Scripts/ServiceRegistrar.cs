@@ -12,6 +12,7 @@ public class ServiceRegistrar : MonoBehaviour
         RegisterService<OcclusionService>();
         RegisterService<SurfacePlacementService>();
         RegisterService<HandRayService>();
+        RegisterService<ReflectionService>();
     }
 
     private void RegisterService<T>() where T : class

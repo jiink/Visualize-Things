@@ -15,6 +15,7 @@ public class UiManagerService : MonoBehaviour
     [SerializeField] private GameObject _radialMenuPrefab;
     [SerializeField] private GameObject _sunEditorPrefab;
     [SerializeField] private GameObject _materialEditorPrefab;
+    [SerializeField] private GameObject _panoScannerPrefab;
     [SerializeField] private OVRHand _ovrHandLeft;
     [SerializeField] private OVRHand _ovrHandRight;
     [SerializeField] private OVRCameraRig _ovrCamRig;
@@ -187,10 +188,12 @@ public class UiManagerService : MonoBehaviour
                 Services.Get<SurfacePlacementService>().Begin(contextObj);
                 break;
             case RadialButtonData.RmSelection.EditLight:
-                Pose p = GetInFaceSpawnPose();
-                var s = Instantiate(_sunEditorPrefab, p.position, p.rotation).GetComponent<SunEditor>();
-                s.Populate(_directionalLight);
-                break;
+                {
+                    Pose p = GetInFaceSpawnPose();
+                    var s = Instantiate(_sunEditorPrefab, p.position, p.rotation).GetComponent<SunEditor>();
+                    s.Populate(_directionalLight);
+                    break;
+                }
             case RadialButtonData.RmSelection.EditMaterials:
                 if (contextObj == null)
                 {
@@ -200,8 +203,12 @@ public class UiManagerService : MonoBehaviour
                 ShowMaterialEditor(contextObj);
                 break;
             case RadialButtonData.RmSelection.SetReflections:
-
-                break;
+                {
+                    Pose p = GetInFaceSpawnPose();
+                    var go = Instantiate(_panoScannerPrefab, p.position, p.rotation);
+                    go.transform.SetParent(Camera.main.transform);
+                    break;
+                }
             default:
                 Debug.Log($"Unimplemented selection {id}");
                 break;
