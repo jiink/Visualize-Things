@@ -11,6 +11,7 @@ public class PanoScanner : MonoBehaviour
     private PassthroughCameraAccess _cameraAccess;
     [SerializeField] private GameObject _photoTemplate;
     [SerializeField] private Transform _photoBall;
+    [SerializeField] private CaptureSphere _captureSphere;
 
     public event EventHandler FinishEvent;
 
@@ -94,6 +95,7 @@ public class PanoScanner : MonoBehaviour
             return;
         }
         renderer.material.mainTexture = tex;
+        _captureSphere.CaptureAndApply();
     }
 
     private IEnumerator DoPhotoLoop()
