@@ -444,8 +444,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 138479710661578542}
-  - component: {fileID: 9116703730984025997}
   - component: {fileID: 4814352044868430002}
+  - component: {fileID: 1353648941702968124}
   m_Layer: 5
   m_Name: MaterialList
   m_TagString: Untagged
@@ -472,32 +472,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0.000021213033}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &9116703730984025997
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7063500112322410921}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.VerticalLayoutGroup
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 1
-  m_Spacing: 8
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
 --- !u!114 &4814352044868430002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -512,6 +486,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ContentSizeFitter
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!114 &1353648941702968124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7063500112322410921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GridLayoutGroup
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 64, y: 64}
+  m_Spacing: {x: 4, y: 4}
+  m_Constraint: 0
+  m_ConstraintCount: 2
 --- !u!1 &7725548787865973841
 GameObject:
   m_ObjectHideFlags: 0
@@ -840,6 +838,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7e7ad4327175c3449c3d07a07629e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  gameObjectNameLabel: {fileID: 2580261293945060496}
-  materialListingPrefab: {fileID: 3236173400635798726, guid: b4567b576762da14fabdd34dc2f65596, type: 3}
-  materialListingsParent: {fileID: 138479710661578542}
+  _gameObjectNameLabel: {fileID: 2580261293945060496}
+  _materialButtonPrefab: {fileID: 7731977055452408911, guid: 7d7d158fdde4d714dab8b2b5c2d6f8c2, type: 3}
+  _materialButtonsParent: {fileID: 138479710661578542}
