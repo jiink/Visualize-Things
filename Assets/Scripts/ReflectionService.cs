@@ -103,6 +103,10 @@ public class ReflectionService : MonoBehaviour
             // make a new "Skybox/Panoramic" material and set its texture to the loaded texture
             Material newSkyMat = new(Shader.Find("Skybox/Panoramic"));
             newSkyMat.SetTexture("_MainTex", texture);
+            // I should probably do this on the CaptureSphere and not here but uhhh....
+            newSkyMat.SetTextureScale("_MainTex", new Vector2(-1, 1));
+            newSkyMat.SetFloat("_Rotation", 90f);
+            // ---
             RenderSettings.skybox = newSkyMat;
             UpdateEnvironmentLighting();
         }
