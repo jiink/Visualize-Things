@@ -26,6 +26,19 @@ public class MaterialEditorMenu : MonoBehaviour
     public TextMeshProUGUI _gameObjectNameLabel;
     public GameObject _materialButtonPrefab;
     public Transform _materialButtonsParent;
+    public GameObject _materialButtonsScrollView;
+    public MaterialListing _materialListing;
+
+    private void Start()
+    {
+        _materialListing.gameObject.SetActive(false);
+        _materialButtonsScrollView.SetActive(true);
+        _materialListing.BackEvent += (_, _) =>
+        {
+            _materialButtonsScrollView.SetActive(true);
+            _materialListing.gameObject.SetActive(false);
+        };
+    }
 
     // Add all materials from the object to the menu
     void AddMaterialEntries(GameObject model)
@@ -84,7 +97,11 @@ public class MaterialEditorMenu : MonoBehaviour
                             Debug.LogError("Couldn't convert sender into MaterialButton");
                         }
                     };
-                    matBtn.PressEvent += (_, _) => { Debug.Log(">>>> matBtn.PressEvent happened"); };
+                    matBtn.PressEvent += (_, _) => {
+                        _materialListing.gameObject.SetActive(true);
+                        _materialListing.Setup(materialCounter, currentMat);
+                        _materialButtonsScrollView.SetActive(false);
+                    };
                 }
             }
         }
@@ -119,6 +136,5 @@ public class MaterialEditorMenu : MonoBehaviour
         {
             Debug.LogWarning("didnt find original color for material: " + mat.name);
         }
-
     }
 }

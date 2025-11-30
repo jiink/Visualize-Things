@@ -14,13 +14,11 @@ public class MaterialButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log(">>>> HOVER");
         HoverEvent?.Invoke(this, EventArgs.Empty);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Debug.Log(">>>> UNHOVER");
         UnhoverEvent?.Invoke(this, EventArgs.Empty);
     }
 
