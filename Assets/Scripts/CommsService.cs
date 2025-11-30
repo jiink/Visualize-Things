@@ -32,11 +32,11 @@ public class CommsService : MonoBehaviour
         if (!_receivedFileQueue.IsEmpty && _receivedFileQueue.TryDequeue(out string filePath))
         {
             Debug.Log($"Processing file {Path.GetFileName(filePath)}");
-            ProcessRxFile(filePath);
+            ProcessRxFileAsync(filePath);
         }
     }
 
-    private void ProcessRxFile(string path)
+    private async void ProcessRxFileAsync(string path)
     {
         string[] supportedTypes = { "obj", "glb", "gltf", "fbx", "stl", "ply", "3mf", "dae" };
         string extension = Path.GetExtension(path);
@@ -48,7 +48,22 @@ public class CommsService : MonoBehaviour
         }
         Transform head = Camera.main.transform;
         Vector3 pos = head.position + head.forward * 0.35f;
-        Services.Get<ModelLoadingService>().ImportModelAsync(path, pos).ConfigureAwait(false);
+        try
+        {
+            (GameObject loadedModel, float longestDimension) = await Services.Get<ModelLoadingService>().ImportModelAsync(path, pos);
+            if (loadedModel != null)
+            {
+                Services.Get<UiManagerService>().CheckIfModelTooBig(loadedModel, longestDimension);
+            }
+            else
+            {
+                Debug.LogError("null loaded model");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Exception importing model: {ex.Message}");
+        }
     }
 
     private static async Task SendQuestConfirmationAsync(NetworkStream stream)

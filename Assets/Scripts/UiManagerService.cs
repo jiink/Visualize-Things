@@ -1,4 +1,5 @@
 using Meta.XR;
+using Meta.XR.MRUtilityKit;
 using Oculus.Interaction;
 using System;
 using UnityEngine;
@@ -17,6 +18,7 @@ public class UiManagerService : MonoBehaviour
     [SerializeField] private GameObject _sunEditorPrefab;
     [SerializeField] private GameObject _materialEditorPrefab;
     [SerializeField] private GameObject _panoScannerPrefab;
+    [SerializeField] private GameObject _modelWarningMenuPrefab;
     [SerializeField] private OVRHand _ovrHandLeft;
     [SerializeField] private OVRHand _ovrHandRight;
     [SerializeField] private OVRCameraRig _ovrCamRig;
@@ -157,6 +159,15 @@ public class UiManagerService : MonoBehaviour
         m.InspectedObject = contextObj;
     }
 
+    private void ShowModelWarningMenu(GameObject loadedModel, string message)
+    {
+        var p = GetInFaceSpawnPose();
+        var m = Instantiate(_modelWarningMenuPrefab, p.position, p.rotation)
+            .GetComponent<ModelWarningMenu>();
+        m.ContextObject = loadedModel;
+        m.WarningDescription = message;
+    }
+
     private void HideRadialMenu()
     {
         if (_currentRadialMenu != null)
@@ -171,7 +182,27 @@ public class UiManagerService : MonoBehaviour
         {
             case RadialButtonData.RmSelection.LoadModel:
                 Services.Get<UiManagerService>().ShowFileBrowser(
-                    (path, pos) => Services.Get<ModelLoadingService>().ImportModelAsync(path, pos).ConfigureAwait(false)
+                    async (path, pos) => {
+                        try
+                        {
+                            (GameObject loadedModel, float longestDim) =
+                                await Services.Get<ModelLoadingService>()
+                                .ImportModelAsync(path, pos);
+                            if (loadedModel != null)
+                            {
+                                Services.Get<UiManagerService>()
+                                .CheckIfModelTooBig(loadedModel, longestDim);
+                            }
+                            else
+                            {
+                                Debug.LogError("null loaded model");
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogError($"Exception importing model: {e.Message}");
+                        }
+                    }
                 );
                 break;
             case RadialButtonData.RmSelection.DeleteModel:
@@ -229,6 +260,45 @@ public class UiManagerService : MonoBehaviour
                 Debug.Log($"Unimplemented selection {id}");
                 break;
         }
+    }
+
+    private float FindBoundsShortestDimension(Bounds bounds)
+    {
+        Vector3 s = bounds.size;
+        float big = Mathf.Min(s.x, s.y, s.z);
+        return big;
+    }
+
+    public void CheckIfModelTooBig(GameObject loadedModel, float longestDimension)
+    {
+        // get biggest dimension of room
+        MRUKRoom room = MRUK.Instance.GetCurrentRoom();
+        if (room == null)
+        {
+            Debug.LogError("couldn't get current room, whatever");
+            return;
+        }
+        float roomShortestDim = FindBoundsShortestDimension(room.GetRoomBounds());
+        if (float.IsNaN(roomShortestDim) || float.IsInfinity(roomShortestDim))
+        {
+            Debug.LogError("bad room dimensions");
+            return;
+        }
+        Debug.Log($"Comparing longest model dimension ({longestDimension:F2} m) " +
+            $"vs shortest room dimension ({roomShortestDim} m)");
+        if (longestDimension < roomShortestDim)
+        {
+            Debug.Log("Model is just fine");
+            return;
+        }
+        // disable it and ask if user really wants to spawn this
+        loadedModel.SetActive(false);
+        ShowModelWarningMenu(
+            loadedModel,
+            $"The model is too big.\n" +
+            $"It's {longestDimension:F1} m long, " +
+            $"but your room's shortest dimension is only {roomShortestDim:F1} m long."
+        );
     }
 
     internal void SetAllLoadedModelCollisions(bool v)

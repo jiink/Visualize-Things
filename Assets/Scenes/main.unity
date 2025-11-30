@@ -478,6 +478,7 @@ MonoBehaviour:
   _sunEditorPrefab: {fileID: 8828422064343113702, guid: 7fb04c909fe4a1a49a6e498baaff9847, type: 3}
   _materialEditorPrefab: {fileID: 9001987373631801415, guid: f7db4f2bbc582ce40b9872516dfc9394, type: 3}
   _panoScannerPrefab: {fileID: 1868059220746426600, guid: b00523aea0b73ce4daa3d25dc7ee843a, type: 3}
+  _modelWarningMenuPrefab: {fileID: 5015679436106173541, guid: b7545279f78e1ce4699d126b46025b87, type: 3}
   _ovrHandLeft: {fileID: 1521450726}
   _ovrHandRight: {fileID: 221755048}
   _ovrCamRig: {fileID: 1337003223}

@@ -40,19 +40,17 @@ public class ModelLoadingService : MonoBehaviour
     }
 
     // Returns the loaded model object once its done loading.
-    public async Task<GameObject> ImportModelAsync(string filePath, Vector3 position)
+    public async Task<(GameObject go, float longestDimension)> ImportModelAsync(string filePath, Vector3 position)
     {
         Debug.Log($"Importing file: {filePath}");
 
         // Spawn a model loading indicator that will be destroyed when the model is done loading
         _loadingIndicator = Instantiate(_modelLoadingIndicator);
         _loadingIndicator.transform.position = position;
-        //_loadingIndicator.transform.position = UnityEngine.Camera.main.transform.position +
-        //                                 (UnityEngine.Camera.main.transform.forward * 0.3f);
         var _loadingIndicatorC = _loadingIndicator.GetComponent<LoadingIndicator>();
         _loadingIndicatorC.Text = $"Loading {Path.GetFileName(filePath)}...";
 
-        var tcs = new TaskCompletionSource<GameObject>();
+        var tcs = new TaskCompletionSource<(GameObject, float)>();
         AssetLoader.LoadModelFromFile(filePath,
             (assetLoaderContext) => // when model is done loading
             {
@@ -60,10 +58,10 @@ public class ModelLoadingService : MonoBehaviour
                 GameObject loadedModel = assetLoaderContext.RootGameObject;
                 if (loadedModel != null)
                 {
-                    var loadedRoot = ProcessLoadedModel(loadedModel, filePath, position);
+                    (var loadedRoot, float longest) = ProcessLoadedModel(loadedModel, filePath, position);
                     _loadingIndicatorC.Text = "Model loaded!";
                     Destroy(_loadingIndicator, 2.0f);
-                    tcs.SetResult(loadedRoot);
+                    tcs.SetResult((loadedRoot, longest));
                     ModelSpawnedEvent?.Invoke(this, new ModelSpawnedEventArgs(loadedRoot));
                 }
                 else
@@ -71,10 +69,10 @@ public class ModelLoadingService : MonoBehaviour
                     _loadingIndicatorC.Text = "Failed to retrieve the loaded model.";
                     Debug.LogError("Failed to retrieve the loaded model.");
                     Destroy(_loadingIndicator, 2.0f);
-                    tcs.SetResult(null);
+                    tcs.SetResult((null, 0));
                 }
             },
-            (assetLoaderContext) => // when model's materials are done loading
+            (assetLoaderContext) => // when model's materials are done loading (final stage of loading process)
             {
                 ReplaceMaterialsRecursively(assetLoaderContext.RootGameObject.transform, _occlusionFriendlyLit);
             },
@@ -84,18 +82,25 @@ public class ModelLoadingService : MonoBehaviour
                 Debug.LogError($"Failed to load model: {error}");
                 _loadingIndicatorC.Text = "Failed to load model: " + error;
                 Destroy(_loadingIndicator, 8.0f);
-                tcs.SetResult(null);
+                tcs.SetResult((null, 0));
             });
         return await tcs.Task;
     }
 
+    private float FindBoundsLongestDimension(Bounds bounds)
+    {
+        Vector3 s = bounds.size;
+        float big = Mathf.Max(s.x, s.y, s.z);
+        return big;
+    }
 
-    private GameObject ProcessLoadedModel(GameObject loadedModel, string filePath, Vector3 position)
+
+    private (GameObject go, float longestDimension) ProcessLoadedModel(GameObject loadedModel, string filePath, Vector3 position)
     {
         if (loadedModel == null)
         {
             Debug.LogError("Loaded model is null!");
-            return null;
+            return (null, 0);
         }
 
         GameObject template = Instantiate(_modelTemplatePrefab, _wrapperObject.transform);
@@ -130,18 +135,18 @@ public class ModelLoadingService : MonoBehaviour
         if (!template.TryGetComponent<PointableUnityEventWrapper>(out var evWrap))
         {
             Debug.LogError("no event wrapper on new model");
-            return null;
+            return (null, 0);
         }
         if (!colliderVisualizer.TryGetComponent<ColliderVisualizer>(out var cvcmp))
         {
             Debug.LogError("no collider visualizer component in new model");
-            return null;
+            return (null, 0);
         }
         evWrap.WhenHover.AddListener((_) => { cvcmp.OnHover(); });
         evWrap.WhenUnhover.AddListener((_) => { cvcmp.OnUnhover(); });
         evWrap.WhenSelect.AddListener((_) => { cvcmp.OnSelect(); });
         evWrap.WhenUnselect.AddListener((_) => { cvcmp.OnUnselect(); });
-        return template;
+        return (template, FindBoundsLongestDimension(bounds));
     }
 
     private void ReplaceMaterialsRecursively(Transform transform, UnityEngine.Material newMaterial)
