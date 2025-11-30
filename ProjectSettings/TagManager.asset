@@ -20,6 +20,7 @@ TagManager:
   - QDSUISection
   - QDSUIToggleSwitch
   - QDSUITooltip
+  - ScanTarget
   layers:
   - Default
   - TransparentFX

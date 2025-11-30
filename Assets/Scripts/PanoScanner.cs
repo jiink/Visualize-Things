@@ -12,6 +12,7 @@ public class PanoScanner : MonoBehaviour
     [SerializeField] private GameObject _photoTemplate;
     [SerializeField] private Transform _photoBall;
     [SerializeField] private CaptureSphere _captureSphere;
+    [SerializeField] private ScanReticle _scanReticle;
 
     public event EventHandler FinishEvent;
 
@@ -51,7 +52,7 @@ public class PanoScanner : MonoBehaviour
             End();
             return;
         }
-        StartCoroutine(DoPhotoLoop());
+        StartCoroutine(DelayedReticleStart());
     }
     
     public void End()
@@ -96,6 +97,13 @@ public class PanoScanner : MonoBehaviour
         }
         renderer.material.mainTexture = tex;
         _captureSphere.CaptureAndApply();
+    }
+
+    private IEnumerator DelayedReticleStart()
+    {
+        yield return new WaitForSeconds(1);
+        _scanReticle.HitEvent += (_, _) => { DoPhoto(); };
+        _scanReticle.Killer = true;
     }
 
     private IEnumerator DoPhotoLoop()
