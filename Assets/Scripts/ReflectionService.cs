@@ -43,10 +43,8 @@ public class ReflectionService : MonoBehaviour
         Debug.Log("Applied default environment map.");
     }
 
-    private void ApplyEnvironmentMap(string fullFilePath)
+    public void ApplyEnvironmentMap(string fullFilePath)
     {
-        // make a new "Skybox/Panoramic" material and set its texture to the loaded texture
-        Material newSkyMat = new Material(Shader.Find("Skybox/Panoramic"));
         if (string.IsNullOrEmpty(fullFilePath) || !System.IO.File.Exists(fullFilePath))
         {
             Debug.LogError("Invalid file path.");
@@ -57,7 +55,6 @@ public class ReflectionService : MonoBehaviour
             // Load the texture
             byte[] fileData = System.IO.File.ReadAllBytes(fullFilePath);
             Texture2D _texture = new(2, 2, TextureFormat.RGBAHalf, false);
-
             //if (fullFilePath.EndsWith(".hdr") || fullFilePath.EndsWith(".exr")) // exr not working tho :(
             //{
             //    try
@@ -85,17 +82,33 @@ public class ReflectionService : MonoBehaviour
                 Debug.LogError("Failed to load texture from file.");
                 return;
             }
-
             _texture.Apply();
+            ApplyEnvironmentMap(_texture);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Error loading texture: {ex.Message}");
+        }
+    }
 
-            newSkyMat.SetTexture("_MainTex", _texture);
-
+    public void ApplyEnvironmentMap(Texture2D texture)
+    {
+        if (texture == null)
+        {
+            Debug.LogError("null texture.");
+            return;
+        }
+        try
+        {
+            // make a new "Skybox/Panoramic" material and set its texture to the loaded texture
+            Material newSkyMat = new(Shader.Find("Skybox/Panoramic"));
+            newSkyMat.SetTexture("_MainTex", texture);
             RenderSettings.skybox = newSkyMat;
             UpdateEnvironmentLighting();
         }
         catch (Exception ex)
         {
-            Debug.LogError($"Error loading texture: {ex.Message}");
+            Debug.LogError($"Error applying environment map: {ex.Message}");
         }
     }
 }

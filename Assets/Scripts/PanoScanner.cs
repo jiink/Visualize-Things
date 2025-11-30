@@ -1,6 +1,7 @@
 using Meta.XR;
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.UI;
@@ -13,6 +14,9 @@ public class PanoScanner : MonoBehaviour
     [SerializeField] private Transform _photoBall;
     [SerializeField] private CaptureSphere _captureSphere;
     [SerializeField] private ScanReticle _scanReticle;
+    [SerializeField] private TextMeshPro _progressLabel;
+    [SerializeField] private Transform _targetsParent;
+    [SerializeField] private SpherePlacer _targetPlacer;
 
     public event EventHandler FinishEvent;
 
@@ -52,13 +56,26 @@ public class PanoScanner : MonoBehaviour
             End();
             return;
         }
+        _targetPlacer.Generate();
         StartCoroutine(DelayedReticleStart());
     }
     
-    public void End()
+    public void End(bool apply = false)
     {
         Debug.Log("PanoScanner ending");
-        StopCoroutine(DoPhotoLoop());
+        if (apply)
+        {
+            Debug.Log("Will apply as reflection");
+            Texture2D tex = _captureSphere.FinalTexture;
+            if (tex == null)
+            {
+                Debug.LogError("final texture is null, won't apply anything");
+            }
+            else
+            {
+                Services.Get<ReflectionService>().ApplyEnvironmentMap(tex);
+            }
+        }
         FinishEvent?.Invoke(this, EventArgs.Empty);
         Destroy(gameObject);
     }
@@ -99,21 +116,32 @@ public class PanoScanner : MonoBehaviour
         _captureSphere.CaptureAndApply();
     }
 
+    private int CountTargets()
+    {
+        return _targetsParent.childCount;
+    }
+
     private IEnumerator DelayedReticleStart()
     {
         yield return new WaitForSeconds(1);
-        _scanReticle.HitEvent += (_, _) => { DoPhoto(); };
+        UpdateProgressLabel();
+        _scanReticle.HitEvent += OnReticleHit;
         _scanReticle.Killer = true;
     }
 
-    private IEnumerator DoPhotoLoop()
+    private void UpdateProgressLabel()
     {
-        const float period = 2.0f;
-        yield return new WaitForSeconds(period);
-        while (true)
+        _progressLabel.text = $"{CountTargets()} remaining";
+    }
+
+    private void OnReticleHit(object sender, EventArgs e)
+    {
+        DoPhoto();
+        UpdateProgressLabel();
+        int targetCount = CountTargets();
+        if (targetCount == 0)
         {
-            DoPhoto();
-            yield return new WaitForSeconds(period);
+            End(true);
         }
     }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class ScanReticle : MonoBehaviour
@@ -11,11 +12,17 @@ public class ScanReticle : MonoBehaviour
         if (other.CompareTag("ScanTarget"))
         {
             Debug.Log("hit!");
-            HitEvent?.Invoke(this, EventArgs.Empty);
-            if (Killer)
-            {
-                Destroy(other.gameObject);
-            }
+            StartCoroutine(KillAndInvoke(other.gameObject.transform.parent.gameObject));
         }
+    }
+
+    private IEnumerator KillAndInvoke(GameObject go)
+    {
+        if (Killer)
+        {
+            Destroy(go);
+            yield return new WaitForEndOfFrame();
+        }
+        HitEvent?.Invoke(this, EventArgs.Empty);
     }
 }

@@ -3,9 +3,11 @@ using UnityEngine;
 public class CaptureSphere : MonoBehaviour
 {
     const int resolutionW = 2048;
-    [SerializeField] private GameObject _displaySphere; // Assign the Sphere object here
+    [SerializeField] private GameObject _displaySphere;
     private Camera _cam;
     private bool _camSetup = false;
+    private Texture2D _finalTexture;
+    public Texture2D FinalTexture => _finalTexture;
 
     void SetupCaptureCamera()
     {
@@ -36,18 +38,18 @@ public class CaptureSphere : MonoBehaviour
         _cam.RenderToCubemap(cubemapRT);
         RenderTexture equirectRT = new(resolutionW, resolutionW / 2, 16);
         cubemapRT.ConvertToEquirect(equirectRT);
-        Texture2D finalTex = new(equirectRT.width, equirectRT.height, TextureFormat.RGB24, false)
+        _finalTexture = new(equirectRT.width, equirectRT.height, TextureFormat.RGB24, false)
         {
             wrapMode = TextureWrapMode.Clamp
         };
         RenderTexture.active = equirectRT;
-        finalTex.ReadPixels(new Rect(0, 0, equirectRT.width, equirectRT.height), 0, 0);
-        finalTex.Apply();
+        _finalTexture.ReadPixels(new Rect(0, 0, equirectRT.width, equirectRT.height), 0, 0);
+        _finalTexture.Apply();
         RenderTexture.active = null;
         if (_displaySphere != null)
         {
             Renderer sphereRenderer = _displaySphere.GetComponent<Renderer>();
-            sphereRenderer.material.mainTexture = finalTex;
+            sphereRenderer.material.mainTexture = _finalTexture;
         }
         Destroy(cubemapRT);
         Destroy(equirectRT);
