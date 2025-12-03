@@ -176,7 +176,7 @@ public class UiManagerService : MonoBehaviour
         }
     }
 
-    private void OnRadialMenuSelection(object sender, RadialButtonData.RmSelection id, GameObject contextObj)
+    private void OnRadialMenuSelection(object sender, RadialButtonData.RmSelection id, GameObject contextObj, OVRHand.Hand hand)
     {
         switch (id)
         {
@@ -223,7 +223,7 @@ public class UiManagerService : MonoBehaviour
                     Debug.LogError($"context object required for {id}");
                     break;
                 }
-                Services.Get<SurfacePlacementService>().Begin(contextObj);
+                Services.Get<SurfacePlacementService>().Begin(contextObj, hand);
                 break;
             case RadialButtonData.RmSelection.EditLight:
                 {

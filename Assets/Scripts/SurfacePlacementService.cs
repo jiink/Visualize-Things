@@ -11,8 +11,10 @@ public class SurfacePlacementService : MonoBehaviour
     [SerializeField] private EffectMesh _effectMesh;
     private bool _mrukRoomLayersAlreadySetUp = false;
     private bool _mrukRoomInteractablesAlreadySetUp = false;
-    private bool _placementActive = false;
+    private OVRHand.Hand _placementActiveHand = OVRHand.Hand.None;
     private GameObject _currentGo = null;
+
+    private bool PlacementActive => _placementActiveHand != OVRHand.Hand.None;
 
     void OnValidate()
     {
@@ -22,7 +24,7 @@ public class SurfacePlacementService : MonoBehaviour
         }
     }
 
-    public void Begin(GameObject go)
+    public void Begin(GameObject go, OVRHand.Hand hand)
     {
         if (go == null)
         {
@@ -35,30 +37,35 @@ public class SurfacePlacementService : MonoBehaviour
         Services.Get<UiManagerService>().SetAllLoadedModelCollisions(false);
         Services.Get<HandRayService>().LaserLineLayer = LayerMask.GetMask("EffectMesh");
         // start listening to selection events of the effect mesh...
-        _placementActive = true;
+        if (hand == OVRHand.Hand.None)
+        {
+            Debug.LogError("you're not supposed to set hand to none");
+        }
+        _placementActiveHand = hand;
         _currentGo = go;
     }
 
     private void Update()
     {
-        if (_placementActive)
+        if (PlacementActive)
         {
             if (_currentGo == null)
             {
                 Debug.LogError("current game object is null");
-                _placementActive = false;
+                _placementActiveHand = OVRHand.Hand.None;
                 return;
             }
-            // todo: instead of hard-coding a hand, should get
-            // what hand was used to press the button in the radial
-            // menu through it being passed in the Begin() method
+            Vector3 ptrPos = (_placementActiveHand == OVRHand.Hand.HandLeft) ?
+                Services.Get<UiManagerService>().LeftPointerPos :
+                Services.Get<UiManagerService>().RightPointerPos;
+            Quaternion ptrRot = (_placementActiveHand == OVRHand.Hand.HandLeft) ?
+                Services.Get<UiManagerService>().LeftPointerRot :
+                Services.Get<UiManagerService>().RightPointerRot;
             Pose placementPose = MRUK.Instance.GetCurrentRoom().GetBestPoseFromRaycast(
-                new Ray(
-                    Services.Get<UiManagerService>().LeftPointerPos,
-                    Services.Get<UiManagerService>().LeftPointerRot * Vector3.forward),
+                new Ray(ptrPos, ptrRot * Vector3.forward),
                 20.0f,
                 new LabelFilter(),
-                out MRUKAnchor anchor,
+                out MRUKAnchor _,
                 out Vector3 sNormal
                 );
             if (!placementPose.Equals(new Pose()))
@@ -161,7 +168,7 @@ public class SurfacePlacementService : MonoBehaviour
                     rayInteractable.InjectSurface(colliderSurface);
                     rayInteractable.WhenPointerEventRaised += (PointerEvent evt) =>
                     {
-                        if (!_placementActive) { return; }
+                        if (!PlacementActive) { return; }
                         if (evt.Type == PointerEventType.Select)
                         {
                             Debug.Log($"MRUK Interactable Selected: {childGo.name}");
@@ -176,7 +183,7 @@ public class SurfacePlacementService : MonoBehaviour
 
     private void End()
     {
-        _placementActive = false;
+        _placementActiveHand = OVRHand.Hand.None;
         _currentGo = null;
         Services.Get<UiManagerService>().SetAllLoadedModelCollisions(true);
         Services.Get<HandRayService>().LaserLineLayer = LayerMask.GetMask("Models");

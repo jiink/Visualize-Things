@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using static RadialButtonData;
 
-public delegate void RadialButtonEventHandler(object sender, RmSelection id, GameObject contextObj);
+public delegate void RadialButtonEventHandler(object sender, RmSelection id, GameObject contextObj, OVRHand.Hand hand);
 public class RadialMenu : MonoBehaviour
 {
     [SerializeField]
@@ -48,8 +48,8 @@ public class RadialMenu : MonoBehaviour
             float angle = (float)(i / (float)numBtns * (360.0f));
             RadialMenuOption newb = Instantiate(_buttonPrefab, _buttonsParent).GetComponent<RadialMenuOption>();
             newb.Populate(def.buttons[i], angle);
-            newb.Button.WhenUnselect.AddListener(() => { 
-                SelectionEvent.Invoke(this, newb.Id, _contextObj);
+            newb.Button.WhenUnselect.AddListener(() => {
+                SelectionEvent.Invoke(this, newb.Id, _contextObj, newb.LastInteractingHand);
                 Destroy(gameObject);
             });
         }
