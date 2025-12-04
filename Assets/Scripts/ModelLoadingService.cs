@@ -32,11 +32,9 @@ public class ModelLoadingService : MonoBehaviour
 
     void Start()
     {
-        _trilibAssetLoaderOptions = new()
-        {
-            GenerateColliders = false,
-            ConvexColliders = false
-        };
+        _trilibAssetLoaderOptions = AssetLoader.CreateDefaultLoaderOptions();
+        _trilibAssetLoaderOptions.GenerateColliders = false;
+        _trilibAssetLoaderOptions.ConvexColliders = false;
     }
 
     // Returns the loaded model object once its done loading.
@@ -83,7 +81,9 @@ public class ModelLoadingService : MonoBehaviour
                 _loadingIndicatorC.Text = "Failed to load model: " + error;
                 Destroy(_loadingIndicator, 8.0f);
                 tcs.SetResult((null, 0));
-            });
+            },
+            null,
+            _trilibAssetLoaderOptions);
         return await tcs.Task;
     }
 
@@ -166,9 +166,15 @@ public class ModelLoadingService : MonoBehaviour
             for (int i = 0; i < numMats; i++)
             {
                 UnityEngine.Material oldMat = meshRenderer.materials[i];
+                Texture oldTexture = oldMat.mainTexture;
+                Color oldColor = oldMat.color;
+                Debug.Log($"[MaterialDebug] material [{i}]: Old shader '{oldMat.shader.name}' | Has texture: {(oldTexture != null ? oldTexture.name : "NULL")} | Color: {oldColor}");
                 UnityEngine.Material newMat = new(newMaterial);
-                // transfer properties
                 newMat.CopyPropertiesFromMaterial(oldMat);
+                if (newMat.mainTexture == null && oldTexture != null)
+                {
+                    Debug.LogError($"[MaterialDebug] CopyPropertiesFromMaterial failed to transfer. should look into manual shader property setting...");
+                }
                 newMats[i] = newMat;
             }
             meshRenderer.materials = newMats;
