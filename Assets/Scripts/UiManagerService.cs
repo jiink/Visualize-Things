@@ -19,6 +19,8 @@ public class UiManagerService : MonoBehaviour
     [SerializeField] private GameObject _materialEditorPrefab;
     [SerializeField] private GameObject _panoScannerPrefab;
     [SerializeField] private GameObject _modelWarningMenuPrefab;
+    [SerializeField] private GameObject _aboutAppMenuPrefab;
+    [SerializeField] private GameObject _logUi;
     [SerializeField] private OVRHand _ovrHandLeft;
     [SerializeField] private OVRHand _ovrHandRight;
     [SerializeField] private OVRCameraRig _ovrCamRig;
@@ -29,6 +31,7 @@ public class UiManagerService : MonoBehaviour
     [SerializeField] private PassthroughCameraAccess _cameraAccess;
     private GameObject _currentRadialMenu;
     private bool _panoScannerExists = false;
+    private GameObject _currentAboutAppMenu = null;
 
     // global pos
     public Vector3 LeftPointerPos => _ovrCamRig.trackingSpace.TransformPoint(_ovrHandLeft.PointerPose.position);
@@ -214,9 +217,6 @@ public class UiManagerService : MonoBehaviour
                 Destroy(contextObj);
                 Debug.Log("destroyed model");
                 break;
-            case RadialButtonData.RmSelection.ChangeOcclusion:
-                Services.Get<OcclusionService>().ToggleOcclusion();
-                break;
             case RadialButtonData.RmSelection.PlaceOnSurface:
                 if (contextObj == null)
                 {
@@ -256,10 +256,34 @@ public class UiManagerService : MonoBehaviour
                     scanner.Begin(_cameraAccess);
                     break;
                 }
+            case RadialButtonData.RmSelection.Reset:
+                DeleteAllLoadedModels();
+                Services.Get<CommsService>().DisposeConnection();
+                break;
+            case RadialButtonData.RmSelection.AboutApp:
+                {
+                    if (_currentAboutAppMenu != null)
+                    {
+                        Destroy(_currentAboutAppMenu);
+                    }
+                    Pose p = GetInFaceSpawnPose();
+                    _currentAboutAppMenu = Instantiate(_aboutAppMenuPrefab, p.position, p.rotation);
+                    break;
+                }
             default:
                 Debug.Log($"Unimplemented selection {id}");
                 break;
         }
+    }
+
+    private void DeleteAllLoadedModels()
+    {
+        GameObject[] objectsToDelete = GameObject.FindGameObjectsWithTag("SelectableObject");
+        foreach (GameObject obj in objectsToDelete)
+        {
+            Destroy(obj);
+        }
+        Debug.Log($"Deleted {objectsToDelete.Length} loaded models");
     }
 
     private float FindBoundsShortestDimension(Bounds bounds)
@@ -321,6 +345,39 @@ public class UiManagerService : MonoBehaviour
                 // Optional: Log if a tagged object is missing a collider
                 Debug.LogWarning($"GameObject '{obj.name}' with tag is missing a Collider component.");
             }
+        }
+    }
+
+    public void ShowLogUi()
+    {
+        if (_logUi == null)
+        {
+            Debug.LogError("There is no log ui, cant show it");
+            return;
+        }
+        _logUi.SetActive(true);
+    }
+
+    public void HideLogUi()
+    {
+        if (_logUi == null)
+        {
+            Debug.LogError("There is no log ui, cant hide it");
+            return;
+        }
+        _logUi.SetActive(false);
+    }
+
+    public void ToggleDebugMode()
+    {
+        Services.Get<OcclusionService>().ToggleOcclusion();
+        if (_logUi.activeSelf)
+        {
+            HideLogUi();
+        }
+        else
+        {
+            ShowLogUi();
         }
     }
 }

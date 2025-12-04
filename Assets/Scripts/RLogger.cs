@@ -32,6 +32,7 @@ public class RLogger : MonoBehaviour
 
     public void Log(object message, LogType type = LogType.Log)
     {
+        if (!isActiveAndEnabled) { return; }
         if ($"{message}".Contains("XrEventDataSpaceQueryCompleteFB"))
         {
             return;
