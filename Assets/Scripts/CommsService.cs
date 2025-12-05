@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -70,7 +71,7 @@ public class CommsService : MonoBehaviour
     {
         Console.WriteLine("Sending Quest confirmation...");
         await stream.WriteAsync(new byte[] { (byte)Cmd.QuestConfirmation });
-        byte[] payload = { 1, 0 };
+        byte[] payload = { (byte)RVersioning.GetProtocolNum(), (byte)RVersioning.GetVersionNum() };
         byte[] payloadLenBytes = BitConverter.GetBytes((UInt32)payload.Length);
         await stream.WriteAsync(payloadLenBytes);
         await stream.WriteAsync(payload);

@@ -97,10 +97,16 @@ public class MaterialEditorMenu : MonoBehaviour
                             Debug.LogError("Couldn't convert sender into MaterialButton");
                         }
                     };
-                    matBtn.PressEvent += (_, _) => {
-                        _materialListing.gameObject.SetActive(true);
-                        _materialListing.Setup(materialCounter, currentMat);
-                        _materialButtonsScrollView.SetActive(false);
+                    matBtn.PressEvent += (o, _) => {
+                        if (o is MaterialButton btnObj) { 
+                            if (_originalColors.TryGetValue(btnObj.Material, out Color originalColor))
+                            {
+                                btnObj.Material.color = originalColor;
+                            }
+                            _materialListing.gameObject.SetActive(true);
+                            _materialListing.Setup(materialCounter, currentMat);
+                            _materialButtonsScrollView.SetActive(false);
+                        }
                     };
                 }
             }
