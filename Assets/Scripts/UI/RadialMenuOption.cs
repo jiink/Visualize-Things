@@ -9,9 +9,10 @@ using static RadialButtonData;
 public class RadialMenuOption : MonoBehaviour
 {
     public TextMeshProUGUI TextPro;
-    public UnityEngine.UI.Image Icon;
+    public MeshRenderer IconRenderer;
     public List<Transform> KeepUpright;
     public InteractableUnityEventWrapper Button;
+    public GameObject LabelRoot;
     public RmSelection Id;
     public OVRHand.Hand LastInteractingHand { get; private set; } = OVRHand.Hand.None;
     private IInteractableView _interactableView;
@@ -25,6 +26,9 @@ public class RadialMenuOption : MonoBehaviour
             return;
         }
         Button.WhenSelect.AddListener(CaptureHand);
+        Button.WhenHover.AddListener(ShowLabel);
+        Button.WhenUnhover.AddListener(HideLabel);
+        LabelRoot.SetActive(false);
     }
 
     private void OnDestroy()
@@ -36,12 +40,25 @@ public class RadialMenuOption : MonoBehaviour
     {
         Id = data.id;
         TextPro.text = data.id.ToString();
-        Icon.sprite = data.icon;
+        if (IconRenderer != null && data.icon != null)
+        {
+            IconRenderer.material.mainTexture = data.icon.texture;
+        }
         transform.Rotate(0, 0, rotationDeg);
         foreach (Transform t in KeepUpright)
         {
             t.Rotate(0, 0, rotationDeg);
         }
+    }
+
+    private void ShowLabel()
+    {
+        LabelRoot.SetActive(true);
+    }
+
+    private void HideLabel()
+    {
+        LabelRoot.SetActive(false);
     }
 
     private void CaptureHand()
