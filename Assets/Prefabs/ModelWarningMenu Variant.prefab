@@ -298,6 +298,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2063916027172392371, guid: 4ba39439fd9d1c248874802f25231dd8, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.31277
+      objectReference: {fileID: 0}
     - target: {fileID: 2510717938997060885, guid: 4ba39439fd9d1c248874802f25231dd8, type: 3}
       propertyPath: m_Size.y
       value: 0.1
@@ -377,6 +381,10 @@ PrefabInstance:
     - target: {fileID: 3647415453064212064, guid: 4ba39439fd9d1c248874802f25231dd8, type: 3}
       propertyPath: m_text
       value: Model Warning
+      objectReference: {fileID: 0}
+    - target: {fileID: 3999979558165649336, guid: 4ba39439fd9d1c248874802f25231dd8, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.31277
       objectReference: {fileID: 0}
     - target: {fileID: 4893719866421430694, guid: 4ba39439fd9d1c248874802f25231dd8, type: 3}
       propertyPath: m_Size.y

@@ -17,6 +17,7 @@ public class PanoScanner : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _progressLabel;
     [SerializeField] private Transform _targetsParent;
     [SerializeField] private SpherePlacer _targetPlacer;
+    private int _totalTargets = 0;
 
     public event EventHandler FinishEvent;
 
@@ -127,11 +128,12 @@ public class PanoScanner : MonoBehaviour
         UpdateProgressLabel();
         _scanReticle.HitEvent += OnReticleHit;
         _scanReticle.Killer = true;
+        _totalTargets = CountTargets();
     }
 
     private void UpdateProgressLabel()
     {
-        _progressLabel.text = $"{CountTargets()} remaining";
+        _progressLabel.text = $"{CountTargets()}/{_totalTargets} captured";
     }
 
     private void OnReticleHit(object sender, EventArgs e)

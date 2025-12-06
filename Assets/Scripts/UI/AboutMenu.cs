@@ -11,7 +11,7 @@ public class AboutMenu : MonoBehaviour
 
     public void OnVisitWebsitePress()
     {
-        Application.OpenURL("https://jiink.github.io/realivation-site/");
+        Application.OpenURL("https://jiink.github.io/visualize-things-site/");
     }
 
     private void Start()
