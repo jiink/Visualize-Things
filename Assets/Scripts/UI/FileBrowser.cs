@@ -60,7 +60,10 @@ public class FileBrowser : MonoBehaviour
                     // It's a file
                     // Subscribe to event so we know when button is pressed
                     fileListing.Selected += onFileListingSelected;
-                    fileListing.iconComponent.sprite = fileListing.fileIcon;
+                    if (ModelLoadingService.IsRecognizedFormat(Path.GetExtension(fileListing.FileName)))
+                    {
+                        fileListing.iconComponent.sprite = fileListing.fileIcon;
+                    }
                 }
 
 

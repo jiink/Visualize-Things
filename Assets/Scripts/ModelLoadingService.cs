@@ -1,6 +1,7 @@
 ﻿using Oculus.Interaction;
 using Oculus.Interaction.Surfaces;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using TriLibCore;
@@ -17,7 +18,17 @@ public class ModelSpawnedEventArgs : EventArgs
 
 public class ModelLoadingService : MonoBehaviour
 {
-
+    public static HashSet<string> RecognizedExtensions = new()
+    {
+        "obj",
+        "glb",
+        "gltf",
+        "fbx",
+        "stl",
+        "ply",
+        "3mf",
+        "dae"
+    };
     [SerializeField] private GameObject _modelTemplatePrefab;
     [SerializeField] private GameObject _cubeVisualizerPrefab;
     [SerializeField] private UnityEngine.Material _occlusionFriendlyLit;
@@ -199,5 +210,20 @@ public class ModelLoadingService : MonoBehaviour
             // Recursively call this method for each child
             AddBoundsRecursively(child, ref bounds);
         }
+    }
+
+    public static bool IsRecognizedFormat(string fileExtension)
+    {
+        if (string.IsNullOrEmpty(fileExtension))
+        {
+            return false;
+        }
+        string extension = fileExtension;
+        if (extension.StartsWith('.'))
+        {
+            extension = extension[1..];
+        }
+        extension = extension.ToLowerInvariant();
+        return RecognizedExtensions.Contains(extension);
     }
 }
