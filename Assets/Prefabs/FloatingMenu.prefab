@@ -242,7 +242,7 @@ GameObject:
   - component: {fileID: 6657143230015368304}
   - component: {fileID: 1683188281831549035}
   - component: {fileID: 4893719866421430694}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: FloatingMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}

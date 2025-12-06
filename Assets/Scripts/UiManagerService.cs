@@ -20,6 +20,7 @@ public class UiManagerService : MonoBehaviour
     [SerializeField] private GameObject _panoScannerPrefab;
     [SerializeField] private GameObject _modelWarningMenuPrefab;
     [SerializeField] private GameObject _aboutAppMenuPrefab;
+    [SerializeField] private GameObject _helpPanelPrefab;
     [SerializeField] private GameObject _logUi;
     [SerializeField] private OVRHand _ovrHandLeft;
     [SerializeField] private OVRHand _ovrHandRight;
@@ -32,6 +33,8 @@ public class UiManagerService : MonoBehaviour
     private GameObject _currentRadialMenu;
     private bool _panoScannerExists = false;
     private GameObject _currentAboutAppMenu = null;
+    private Transform _inFrontOfFace = null;
+    private GameObject _helpPanel;
 
     // global pos
     public Vector3 LeftPointerPos => _ovrCamRig.trackingSpace.TransformPoint(_ovrHandLeft.PointerPose.position);
@@ -39,10 +42,10 @@ public class UiManagerService : MonoBehaviour
     public Quaternion LeftPointerRot => _ovrHandLeft.PointerPose.rotation;
     public Quaternion RightPointerRot => _ovrHandRight.PointerPose.rotation;
 
-    public Pose GetInFaceSpawnPose(bool flipped = false)
+    public Pose GetInFaceSpawnPose(bool flipped = false, float distance = 0.35f)
     {
         Transform head = Camera.main.transform;
-        Vector3 pos = head.position + head.forward * 0.35f;
+        Vector3 pos = head.position + head.forward * distance;
         Quaternion rot = Quaternion.LookRotation(
             (flipped ? -1.0f : 1.0f) * head.forward);
         return new Pose(pos, rot);
@@ -63,6 +66,13 @@ public class UiManagerService : MonoBehaviour
     private void Start()
     {
         _pinchDetector.PinchEvent += OnPinch;
+        Pose p = GetInFaceSpawnPose(false, 0.7f);
+        _inFrontOfFace = new GameObject("InFrontOfFace").transform;
+        _inFrontOfFace.SetParent(Camera.main.transform);
+        _inFrontOfFace.SetPose(p);
+        _helpPanel = Instantiate(_helpPanelPrefab);
+        _helpPanel.transform.SetPose(p);
+        _helpPanel.GetComponent<SmoothTrackToTarget>().Target = _inFrontOfFace.transform;
     }
 
     public GameObject ShowFileBrowser(System.Action<string, Vector3> onFileSelectedCallback)
@@ -99,6 +109,10 @@ public class UiManagerService : MonoBehaviour
             //Debug.Log($"PINCH BEGIN!! {hand} {finger}");
             Vector3 slidBackPose = pointerPose + (Camera.main.transform.forward * 0.1f);
             ShowRadialMenu(RadialMenuKind.Primary, slidBackPose, null, null);
+            if (_helpPanel != null)
+            {
+                Destroy(_helpPanel);
+            }
         }
     }
 

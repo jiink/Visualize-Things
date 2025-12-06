@@ -8,6 +8,12 @@ public class AboutMenu : MonoBehaviour
     {
         Services.Get<UiManagerService>().ToggleDebugMode();
     }
+
+    public void OnVisitWebsitePress()
+    {
+        Application.OpenURL("https://jiink.github.io/realivation-site/");
+    }
+
     private void Start()
     {
         _versionLabel.text = $"v{Application.version}";

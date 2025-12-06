@@ -480,6 +480,7 @@ MonoBehaviour:
   _panoScannerPrefab: {fileID: 1868059220746426600, guid: b00523aea0b73ce4daa3d25dc7ee843a, type: 3}
   _modelWarningMenuPrefab: {fileID: 5015679436106173541, guid: b7545279f78e1ce4699d126b46025b87, type: 3}
   _aboutAppMenuPrefab: {fileID: 855677039164253762, guid: e099c5739a672c043a8989788de62df4, type: 3}
+  _helpPanelPrefab: {fileID: 697386083328116874, guid: fef7bc130aad6154eb1600eaa137095b, type: 3}
   _logUi: {fileID: 960775056}
   _ovrHandLeft: {fileID: 1521450726}
   _ovrHandRight: {fileID: 221755048}
@@ -2820,7 +2821,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.24091, y: 0, z: 2.80019}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
