@@ -17,6 +17,8 @@ public class FileBrowser : MonoBehaviour
     public Transform fileListingsParent;
     public TextMeshProUGUI pathLabel;
 
+    private string _transferDir;
+
     private string _selectedFileName;
     private string _currentPath;
     public string CurrentPath
@@ -97,13 +99,7 @@ public class FileBrowser : MonoBehaviour
 
     void Start()
     {
-        string targetDirectory = Path.Combine(Application.persistentDataPath, Services.TransferDirName);
-        if (!Directory.Exists(targetDirectory))
-        {
-            Directory.CreateDirectory(targetDirectory);
-            Debug.Log("Created new directory: " + targetDirectory);
-        }
-        CurrentPath = targetDirectory;
+        GoToTransferDirectory();
     }
 
     void Update()
@@ -116,6 +112,31 @@ public class FileBrowser : MonoBehaviour
         DirectoryInfo directory = new(CurrentPath);
         DirectoryInfo parentDirectory = directory.Parent;
         CurrentPath = parentDirectory.FullName;
+    }
+
+    public void GoToTransferDirectory()
+    {
+        _transferDir = Path.Combine(Application.persistentDataPath, Services.TransferDirName);
+        string targetDirectory = _transferDir;
+        if (!Directory.Exists(targetDirectory))
+        {
+            Directory.CreateDirectory(targetDirectory);
+            Debug.Log("Created new directory: " + targetDirectory);
+        }
+        CurrentPath = targetDirectory;
+    }
+
+    public void GoToDownloadsDirectory()
+    {
+        string targetDir = "/storage/emulated/0/Download";
+        if (Directory.Exists(targetDir))
+        {
+            CurrentPath = targetDir;
+        }
+        else
+        {
+            Debug.LogError($"weird, {targetDir} doesn't exist");
+        }
     }
 
     public void OpenSelectedFile()
