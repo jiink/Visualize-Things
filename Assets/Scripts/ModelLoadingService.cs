@@ -142,7 +142,7 @@ public class ModelLoadingService : MonoBehaviour
         colliderVisualizer.tag = "SelectionVisualizer";
         colliderVisualizer.transform.SetParent(template.transform);
         colliderVisualizer.transform.localPosition = boxCollider.center;
-        colliderVisualizer.transform.localScale = boxCollider.size;
+        colliderVisualizer.transform.localScale = boxCollider.size + (Vector3.one * 0.002f);
         if (!template.TryGetComponent<PointableUnityEventWrapper>(out var evWrap))
         {
             Debug.LogError("no event wrapper on new model");
