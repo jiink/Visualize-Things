@@ -93,6 +93,7 @@ public class QrService : MonoBehaviour
 
     private bool IsPayloadRelevant(string payload)
     {
+        Debug.Log($">>>> Checking if payload \"{payload}\" is relevant...");
         if (IPAddress.TryParse(payload, out IPAddress _))
         {
             return true;
@@ -100,7 +101,11 @@ public class QrService : MonoBehaviour
         return false;
     }
 
-    
+    private static string CleanPayload(string rawPayload)
+    {
+        if (string.IsNullOrEmpty(rawPayload)) return string.Empty;
+        return rawPayload.Trim().Replace("\0", string.Empty);
+    }
 
     public void OnTrackableAdded(MRUKTrackable trackable)
     {
@@ -110,12 +115,13 @@ public class QrService : MonoBehaviour
         }
         Debug.Log($"{nameof(OnTrackableAdded)}: QRCode tracked!\nUUID={trackable.Anchor.Uuid}\nData={trackable.MarkerPayloadString}");
         // see if this is qr code is even relevant to us
-        if (!IsPayloadRelevant(trackable.MarkerPayloadString))
+        string cleanPayload = CleanPayload(trackable.MarkerPayloadString);
+        if (!IsPayloadRelevant(cleanPayload))
         {
             Debug.LogWarning("Irrelevant payload");
             return;
         }
-        string ip = trackable.MarkerPayloadString;
+        string ip = cleanPayload;
         string hostname = Services.Get<CommsService>().IpStrToHostname(ip);
         Services.Get<UiManagerService>().ShowConnectionPrompt(trackable.transform, ip, hostname);
     }
