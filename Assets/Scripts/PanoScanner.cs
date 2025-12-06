@@ -14,7 +14,7 @@ public class PanoScanner : MonoBehaviour
     [SerializeField] private Transform _photoBall;
     [SerializeField] private CaptureSphere _captureSphere;
     [SerializeField] private ScanReticle _scanReticle;
-    [SerializeField] private TextMeshPro _progressLabel;
+    [SerializeField] private TextMeshProUGUI _progressLabel;
     [SerializeField] private Transform _targetsParent;
     [SerializeField] private SpherePlacer _targetPlacer;
 
