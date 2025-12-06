@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: RadialBackPrimary
-  m_Shader: {fileID: 4800000, guid: 7af3b9c40c4254e4185931e59a260def, type: 3}
+  m_Name: LitPrimary
+  m_Shader: {fileID: 4800000, guid: b6c71c9c13df7fb4ca02d7fcdc872360, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -23,10 +23,6 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _BaseMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -71,9 +67,9 @@ Material:
     - _DstBlend: 0
     - _EnvironmentDepthBias: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0.5
+    - _Glossiness: 0.514
     - _GlossyReflections: 1
-    - _Metallic: 0
+    - _Metallic: 0.63
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
@@ -83,8 +79,7 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 0.3974151, b: 0, a: 0.49019608}
-    - _Color: {r: 0.6509804, g: 0.2196078, b: 0.21176466, a: 0.9137255}
+    - _Color: {r: 0.6509804, g: 0.21960784, b: 0.21176471, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
