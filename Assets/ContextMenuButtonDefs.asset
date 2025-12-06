@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RadialMenuDefinition
   buttons:
   - id: 1
-    icon: {fileID: 21300000, guid: a505137a08961f14495488b65dce84c5, type: 3}
+    icon: {fileID: 21300000, guid: d895ba7ec98a4cd4f8dea00669018b9a, type: 3}
   - id: 2
-    icon: {fileID: 21300000, guid: a505137a08961f14495488b65dce84c5, type: 3}
+    icon: {fileID: 21300000, guid: af7d6803fcf63984c88b62676993ce88, type: 3}
   - id: 8
-    icon: {fileID: 21300000, guid: a505137a08961f14495488b65dce84c5, type: 3}
+    icon: {fileID: 21300000, guid: e9f1744a5505a484e882528ceb68a7a6, type: 3}

@@ -39,7 +39,7 @@ public class RadialMenuOption : MonoBehaviour
     public void Populate(RadialButtonData data, float rotationDeg)
     {
         Id = data.id;
-        TextPro.text = data.id.ToString();
+        TextPro.text = data.id.GetDisplayName();
         if (IconRenderer != null && data.icon != null)
         {
             IconRenderer.material.mainTexture = data.icon.texture;
