@@ -46,7 +46,7 @@ public class MaterialListing : MonoBehaviour
             return;
         }
         _material = currentMat;
-        nameLabel.text = $"Material #{materialNum}: {_material.name}";
+        nameLabel.text = $"#{materialNum}";
     }
 
     public void OnBack() {
