@@ -133,7 +133,7 @@ public class PanoScanner : MonoBehaviour
 
     private void UpdateProgressLabel()
     {
-        _progressLabel.text = $"{CountTargets()}/{_totalTargets} captured";
+        _progressLabel.text = $"{_totalTargets - CountTargets()}/{_totalTargets} captured";
     }
 
     private void OnReticleHit(object sender, EventArgs e)
