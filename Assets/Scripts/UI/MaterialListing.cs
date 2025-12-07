@@ -1,9 +1,15 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MaterialListing : MonoBehaviour
 {
+    public Slider hueSlider;
+    public Slider saturationSlider;
+    public Slider lightnessSlider;
+    public Slider metallicSlider;
+    public Slider smoothnessSlider;
     public TextMeshProUGUI nameLabel;
     private Material _material;
     private int _materialNum;
@@ -47,6 +53,15 @@ public class MaterialListing : MonoBehaviour
         }
         _material = currentMat;
         nameLabel.text = $"#{materialNum}";
+        float currentMetallic = _material.HasProperty("_Metallic") ? _material.GetFloat("_Metallic") : 0f;
+        float currentSmoothness = _material.HasProperty("_Glossiness") ? _material.GetFloat("_Glossiness") : 0f;
+        Color.RGBToHSV(_material.color, out float h, out float s, out float v);
+        if (metallicSlider != null) metallicSlider.SetValueWithoutNotify(currentMetallic);
+        if (smoothnessSlider != null) smoothnessSlider.SetValueWithoutNotify(currentSmoothness);
+        if (hueSlider != null) hueSlider.SetValueWithoutNotify(h);
+        if (saturationSlider != null) saturationSlider.SetValueWithoutNotify(s);
+        if (lightnessSlider != null) lightnessSlider.SetValueWithoutNotify(v);
+
     }
 
     public void OnBack() {

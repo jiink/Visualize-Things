@@ -120,10 +120,18 @@ public class MaterialEditorMenu : MonoBehaviour
             Debug.LogError("Null material");
             return;
         }
-        if (!_originalColors.ContainsKey(mat) && mat.HasProperty("_Color"))
+        if (mat.HasProperty("_Color"))
         {
-            _originalColors[mat] = mat.color;
+            if (_originalColors.ContainsKey(mat))
+            {
+                _originalColors[mat] = mat.color;
+            }
+            else
+            {
+                _originalColors.Add(mat, mat.color);
+            }
         }
+
         mat.color = Color.magenta;
     }
 

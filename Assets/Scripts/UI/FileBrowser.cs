@@ -38,6 +38,16 @@ public class FileBrowser : MonoBehaviour
             {
                 Destroy(child.gameObject);
             }
+            if (value == "/storage/emulated/0/Download")
+            {
+                FileListing f1 = Instantiate(fileListingPrefab, fileListingsParent).GetComponent<FileListing>();
+                f1.FileName = "(Coming soon)";
+                FileListing f2 = Instantiate(fileListingPrefab, fileListingsParent).GetComponent<FileListing>();
+                f2.FileName = "(I need to figure out how to handle the permissions.)";
+                FileListing f3 = Instantiate(fileListingPrefab, fileListingsParent).GetComponent<FileListing>();
+                f3.FileName = "(For now you need to use something else to move your files from Downloads to the app's TransferDirectory)";
+                return;
+            }
             DirectoryInfo directory = new(value);
             // We want both files and folders to show
             FileSystemInfo[] fileSystemInfos = directory.GetFileSystemInfos();
