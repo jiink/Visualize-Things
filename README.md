@@ -14,6 +14,7 @@ By the way the working title / codename was "Realivation"; that name hasn't been
 
 ## Known issues
 
+- When you re-center your playspace, your lasers become misaligned.
 - On initial use of the "Set Reflections" option in the radial menu, the app requests camera permissions. After granting permission, you must select "Set Reflections" a second time for the feature to work.
 - If you connect to the Companion app with the QR code and then disconnect, you won't be able to connect to the same computer again until you restart the app. This has to do with QR code "trackables", not the networking itself.
 - Error handling and communication is poor. Things will be printed to the debug log, but not shown to the user. So if something wrong happens when loading a 3D model, connecting to the Companion app, etc., nothing will happen and the user will have no information to go off of. A good way to show errors to the user needs to be figured out.
